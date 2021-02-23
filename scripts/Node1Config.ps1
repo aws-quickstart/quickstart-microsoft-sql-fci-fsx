@@ -30,7 +30,7 @@ $ClusterAdminUser = $DomainNetBIOSName + '\' + $AdminUser.UserName
 $Credentials = (New-Object PSCredential($ClusterAdminUser,(ConvertTo-SecureString $AdminUser.Password -AsPlainText -Force)))
 
 if ($FileServerNetBIOSName) {
-    $ShareName = "\\" + $FileServerNetBIOSName + "\SqlShare"
+    $ShareName = "\\" + $FileServerNetBIOSName + "\SqlWitnessShare"
 }
 
 $ConfigurationData = @{

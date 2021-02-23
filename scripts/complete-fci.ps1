@@ -1,4 +1,4 @@
-[CmdletBinding()]
+    [CmdletBinding()]
 param(
 
     [Parameter(Mandatory=$true)]
@@ -12,9 +12,15 @@ param(
 	
 	[Parameter(Mandatory=$true)]
     [string]$Node1FciIp,
-	
+
+    [Parameter(Mandatory=$true)]
+    [string]$Node1SubnetMask,
+    
 	[Parameter(Mandatory=$true)]
     [string]$Node2FciIp,
+
+    [Parameter(Mandatory=$true)]
+    [string]$Node2SubnetMask,
 	
 	[Parameter(Mandatory=$true)]
     [string]$FCIName,
@@ -42,7 +48,7 @@ $sqlDataPath = "\\{0}\SqlShare\mssql\data" -f $FileServerPath
 $sqlLogPath = "\\{0}\SqlShare\mssql\logs" -f $FileServerPath
 
  
-$arguments = '/QUIET /ACTION=CompleteFailoverCluster /InstanceName=MSSQLSERVER /INDICATEPROGRESS=FALSE /FAILOVERCLUSTERNETWORKNAME={0} /FAILOVERCLUSTERIPADDRESSES="IPv4;{5};Cluster Network 1;255.255.255.0" "IPv4;{6};Cluster Network 2;255.255.255.0" /CONFIRMIPDEPENDENCYCHANGE=TRUE /FAILOVERCLUSTERGROUP="SQL Server (MSSQLSERVER)" /INSTALLSQLDATADIR="C:\Program Files\Microsoft SQL Server" /SQLCOLLATION="SQL_Latin1_General_CP1_CI_AS" /SQLSYSADMINACCOUNTS={1} /INSTALLSQLDATADIR={2} /SQLUSERDBDIR={3} /SQLUSERDBLOGDIR={4}' -f $FCIName, $SQLAdminAccounts, $sqlRootPath, $sqlDataPath, $sqlLogPath, $Node1FciIp, $Node2FciIp
+$arguments = '/QUIET /ACTION=CompleteFailoverCluster /InstanceName=MSSQLSERVER /INDICATEPROGRESS=FALSE /FAILOVERCLUSTERNETWORKNAME={0} /FAILOVERCLUSTERIPADDRESSES="IPv4;{1};Cluster Network 1;{2}" "IPv4;{3};Cluster Network 2;{4}" /CONFIRMIPDEPENDENCYCHANGE=TRUE /FAILOVERCLUSTERGROUP="SQL Server (MSSQLSERVER)" /INSTALLSQLDATADIR="C:\Program Files\Microsoft SQL Server" /SQLCOLLATION="SQL_Latin1_General_CP1_CI_AS" /SQLSYSADMINACCOUNTS={5} /INSTALLSQLDATADIR={6} /SQLUSERDBDIR={7} /SQLUSERDBLOGDIR={8}' -f $FCIName, $Node1FciIp, $Node1SubnetMask, $Node2FciIp, $Node2SubnetMask, $SQLAdminAccounts, $sqlRootPath, $sqlDataPath, $sqlLogPath 
 Invoke-Command -scriptblock { 
     Start-Process -FilePath C:\SQLinstallmedia\setup.exe -ArgumentList $Using:arguments -Wait -NoNewWindow
 } -Credential $Credentials -ComputerName $HostName -Authentication credssp

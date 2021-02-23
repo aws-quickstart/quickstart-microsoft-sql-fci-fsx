@@ -28,8 +28,14 @@ Invoke-Command -ComputerName $FSxRemoteAdminEndpoint -ConfigurationName FSxRemot
   Grant-FSxSmbShareAccess -Name $Using:shareName -AccountName $Using:ClusterAdminUser -AccessRight Full -force
 } -Credential $Credentials
 
+#Configure Witness SMB share on FSx
+$WitnessshareName = "SqlWitnessShare"
 Invoke-Command -ComputerName $FSxRemoteAdminEndpoint -ConfigurationName FSxRemoteAdmin -scriptblock {   
-  Grant-FSxSmbShareAccess -Name $Using:shareName  -AccountName Everyone -AccessRight Change -force 
+  New-FSxSmbShare -Name $Using:WitnessshareName -Path "D:\share\" -Description "Witness share for MSSQL FCI" -ContinuouslyAvailable $True -Credential $Using:Credentials 
+} -Credential $Credentials
+
+Invoke-Command -ComputerName $FSxRemoteAdminEndpoint -ConfigurationName FSxRemoteAdmin -scriptblock {   
+  Grant-FSxSmbShareAccess -Name $Using:WitnessshareName  -AccountName Everyone -AccessRight Change -force 
 } -Credential $Credentials
 
 
