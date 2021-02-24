@@ -47,6 +47,7 @@ Metadata:
         default: AWS Quick Start Configuration
       Parameters:
       - QSS3BucketName
+      - QSS3BucketRegion
       - QSS3KeyPrefix
     ParameterLabels:
       KeyPairName:
@@ -57,6 +58,8 @@ Metadata:
         default: Private Subnet 2 ID
       QSS3BucketName:
         default: Quick Start S3 Bucket Name
+      QSS3BucketRegion:
+        default: Quick Start S3 bucket region
       QSS3KeyPrefix:
         default: Quick Start S3 Key Prefix
       VPCID:
@@ -127,6 +130,10 @@ Parameters:
     Description: S3 bucket name for the Quick Start assets. This string can include
       numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start
       or end with a hyphen (-).
+    Type: String
+  QSS3BucketRegion:
+    Default: us-east-1
+    Description: The AWS Region where the Quick Start S3 bucket (QSS3BucketName) is hosted. When using your own bucket, you must specify this value.
     Type: String
   QSS3KeyPrefix:
     AllowedPattern: "^[0-9a-zA-Z-/]*$"
@@ -272,6 +279,7 @@ Conditions:
     Fn::Equals:
     - Ref: DomainMemberSGID
     - ""
+  UsingDefaultBucket: !Equals [!Ref QSS3BucketName, 'aws-quickstart']
 Rules:
   KeyPairsNotEmpty:
     Assertions:
@@ -455,9 +463,9 @@ Resources:
               - Action:
                   - s3:GetObject
                   - s3:ListBucket
-                Resource: 
-                  - !Sub 'arn:${AWS::Partition}:s3:::${QSS3BucketName}/${QSS3KeyPrefix}*'
-                  - !Sub 'arn:${AWS::Partition}:s3:::${QSS3BucketName}'
+                Resource:
+                  - !Sub ['arn:${AWS::Partition}:s3:::${S3Bucket}/${QSS3KeyPrefix}*', S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]]
+                  - !Sub ['arn:${AWS::Partition}:s3:::${S3Bucket}', S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]]
                 Effect: Allow
           PolicyName: aws-quick-start-s3-policy
         - PolicyDocument:
@@ -561,6 +569,17 @@ Resources:
           WindowsVersion:
             default: !Sub "${WindowsVersion}"
             description: "The AMI used to deploy SqlFSx instance."
+            type: "String"
+          URLSuffix:
+            description: "AWS URL suffix"
+            type: "String"
+          QSS3BucketName:
+            default: "aws-quickstart"
+            description: "S3 bucket name for the Quick Start assets. Quick Start bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-)."
+            type: "String"
+          QSS3KeyPrefix:
+            default: "quickstart-microsoft-sql/"
+            description: "S3 key prefix for the Quick Start assets. Quick Start key prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slash (/)."
             type: "String"
         mainSteps:
         #Getting cluster infrastructure resources
@@ -790,8 +809,17 @@ Resources:
               CloudWatchLogGroupName: !Ref 'QuickStartLogs'
             Parameters:
               sourceType: "S3"
-              sourceInfo: !Sub ['{"path": "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/install-dsc-modules.ps1"}',
-                  {QSS3Region: !If [GovCloudCondition, s3-us-gov-west-1, s3]}]
+              sourceInfo:
+                !Sub
+                  - '{"path": "https://${S3Bucket}.s3.${S3Region}.{{URLSuffix}}/{{QSS3KeyPrefix}}scripts/install-dsc-modules.ps1"}'
+                  - S3Bucket: !If 
+                      - UsingDefaultBucket
+                      - !Sub '${QSS3BucketName}-${AWS::Region}'
+                      - !Ref QSS3BucketName
+                    S3Region: !If 
+                      - UsingDefaultBucket
+                      - !Ref AWS::Region
+                      - !Ref QSS3BucketRegion
               commandLine: "./install-dsc-modules.ps1"               
         - name: "wsfcnLCMConfig"
           action: "aws:runCommand"
@@ -804,8 +832,17 @@ Resources:
               CloudWatchLogGroupName: !Ref 'QuickStartLogs'
             Parameters:
               sourceType: "S3"
-              sourceInfo: !Sub ['{"path": "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/LCM-Config.ps1"}',
-                  {QSS3Region: !If [GovCloudCondition, s3-us-gov-west-1, s3]}]
+              sourceInfo:
+                !Sub
+                  - '{"path": "https://${S3Bucket}.s3.${S3Region}.{{URLSuffix}}/{{QSS3KeyPrefix}}scripts/LCM-Config.ps1"}'
+                  - S3Bucket: !If 
+                      - UsingDefaultBucket
+                      - !Sub '${QSS3BucketName}-${AWS::Region}'
+                      - !Ref QSS3BucketName
+                    S3Region: !If 
+                      - UsingDefaultBucket
+                      - !Ref AWS::Region
+                      - !Ref QSS3BucketRegion
               commandLine: "./LCM-Config.ps1"              
         #Joining to AD
         - name: "JoinAD"
@@ -820,7 +857,7 @@ Resources:
             Parameters:
               directoryId: "{{DirectoryId}}"
               directoryName: "{{DomainDNSName}}"
-              dnsIpAddresses: "{{ADDnsIpAddresses}}"
+              #dnsIpAddresses: "{{ADDnsIpAddresses}}"
         - name: "EnableCredSSP"
           action: "aws:runCommand"
           onFailure: "step:signalfailure"
@@ -832,8 +869,17 @@ Resources:
               CloudWatchLogGroupName: !Ref 'QuickStartLogs'
             Parameters:
               sourceType: "S3"
-              sourceInfo: !Sub ['{"path": "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/enable-CredSSP.ps1"}',
-                  {QSS3Region: !If [GovCloudCondition, s3-us-gov-west-1, s3]}]
+              sourceInfo:
+                !Sub
+                  - '{"path": "https://${S3Bucket}.s3.${S3Region}.{{URLSuffix}}/{{QSS3KeyPrefix}}scripts/enable-CredSSP.ps1"}'
+                  - S3Bucket: !If 
+                      - UsingDefaultBucket
+                      - !Sub '${QSS3BucketName}-${AWS::Region}'
+                      - !Ref QSS3BucketName
+                    S3Region: !If 
+                      - UsingDefaultBucket
+                      - !Ref AWS::Region
+                      - !Ref QSS3BucketRegion
               commandLine: "./enable-CredSSP.ps1 -DomainDNSName '{{DomainDNSName}}'"                     
         #Creating continuously available SMB share on FSx file system
         - name: "CreateCAShare"
@@ -847,8 +893,17 @@ Resources:
               CloudWatchLogGroupName: !Ref 'QuickStartLogs'
             Parameters:
               sourceType: "S3"
-              sourceInfo: !Sub ['{"path": "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/create-ca-share.ps1"}',
-                  {QSS3Region: !If [GovCloudCondition, s3-us-gov-west-1, s3]}]
+              sourceInfo:
+                !Sub
+                  - '{"path": "https://${S3Bucket}.s3.${S3Region}.{{URLSuffix}}/{{QSS3KeyPrefix}}scripts/create-ca-share.ps1"}'
+                  - S3Bucket: !If 
+                      - UsingDefaultBucket
+                      - !Sub '${QSS3BucketName}-${AWS::Region}'
+                      - !Ref QSS3BucketName
+                    S3Region: !If 
+                      - UsingDefaultBucket
+                      - !Ref AWS::Region
+                      - !Ref QSS3BucketRegion
               commandLine: "./create-ca-share.ps1 -DomainNetBIOSName '{{DomainNetBIOSName}}' -AdminSecret '{{AdminSecrets}}' -FSxRemoteAdminEndpoint '{{FindFSxVolDnsAddress.FSxDnsAddress}}'.split(';')[1]"
                    
         #Creating WSFC
@@ -864,8 +919,17 @@ Resources:
               CloudWatchLogGroupName: !Ref 'QuickStartLogs'
             Parameters:
               sourceType: "S3"
-              sourceInfo: !Sub ['{"path": "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Node1Config.ps1"}',
-                  {QSS3Region: !If [GovCloudCondition, s3-us-gov-west-1, s3]}]
+              sourceInfo:
+                !Sub
+                  - '{"path": "https://${S3Bucket}.s3.${S3Region}.{{URLSuffix}}/{{QSS3KeyPrefix}}scripts/Node1Config.ps1"}'
+                  - S3Bucket: !If 
+                      - UsingDefaultBucket
+                      - !Sub '${QSS3BucketName}-${AWS::Region}'
+                      - !Ref QSS3BucketName
+                    S3Region: !If 
+                      - UsingDefaultBucket
+                      - !Ref AWS::Region
+                      - !Ref QSS3BucketRegion
               commandLine: "./Node1Config.ps1 -DomainNetBIOSName {{DomainNetBIOSName}} -DomainDNSName {{DomainDNSName}} -WSFCNode1PrivateIP2 '{{FindSecondaryIpAddresses.SecondaryPrivateIpAddresses}}'.split(';')[0] -ClusterName {{ClusterName}} -AdminSecret {{AdminSecrets}} -FileServerNetBIOSName '{{FindFSxVolDnsAddress.FSxDnsAddress}}'.split(';')[0]"
         - name: "RunNode1WsfcMOF"
           action: aws:runCommand
@@ -904,8 +968,17 @@ Resources:
               CloudWatchLogGroupName: !Ref 'QuickStartLogs'
             Parameters:
               sourceType: "S3"
-              sourceInfo: !Sub ['{"path": "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/AdditionalNodeConfig.ps1"}',
-                  {QSS3Region: !If [GovCloudCondition, s3-us-gov-west-1, s3]}]
+              sourceInfo:
+                !Sub
+                  - '{"path": "https://${S3Bucket}.s3.${S3Region}.{{URLSuffix}}/{{QSS3KeyPrefix}}scripts/AdditionalNodeConfig.ps1"}'
+                  - S3Bucket: !If 
+                      - UsingDefaultBucket
+                      - !Sub '${QSS3BucketName}-${AWS::Region}'
+                      - !Ref QSS3BucketName
+                    S3Region: !If 
+                      - UsingDefaultBucket
+                      - !Ref AWS::Region
+                      - !Ref QSS3BucketRegion
               commandLine: "./AdditionalNodeConfig.ps1 -DomainNetBIOSName {{DomainNetBIOSName}} -WSFCNodePrivateIP2 '{{FindSecondaryIpAddresses.SecondaryPrivateIpAddresses}}'.split(';')[2] -ClusterName {{ClusterName}} -AdminSecret {{AdminSecrets}}"
         - name: "RunNode2WsfcMOF"
           action: aws:runCommand
@@ -944,8 +1017,17 @@ Resources:
               CloudWatchLogGroupName: !Ref 'QuickStartLogs'
             Parameters:
               sourceType: "S3"
-              sourceInfo: !Sub ['{"path": "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Configure-MAD-Permissions.ps1"}',
-                  {QSS3Region: !If [GovCloudCondition, s3-us-gov-west-1, s3]}]
+              sourceInfo:
+                !Sub
+                  - '{"path": "https://${S3Bucket}.s3.${S3Region}.{{URLSuffix}}/{{QSS3KeyPrefix}}scripts/Configure-MAD-Permissions"}'
+                  - S3Bucket: !If 
+                      - UsingDefaultBucket
+                      - !Sub '${QSS3BucketName}-${AWS::Region}'
+                      - !Ref QSS3BucketName
+                    S3Region: !If 
+                      - UsingDefaultBucket
+                      - !Ref AWS::Region
+                      - !Ref QSS3BucketRegion
               commandLine: "./Configure-MAD-Permissions.ps1 -AdminSecret {{AdminSecrets}} -DomainNetBIOSName '{{DomainNetBIOSName}}' -wsfcName '{{ClusterName}}'"
         #Installing MSSQL FCI
         - name: "PrepareFCI"
@@ -959,8 +1041,17 @@ Resources:
               CloudWatchLogGroupName: !Ref 'QuickStartLogs'
             Parameters:
               sourceType: "S3"
-              sourceInfo: !Sub ['{"path": "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/prepare-fci.ps1"}',
-                  {QSS3Region: !If [GovCloudCondition, s3-us-gov-west-1, s3]}]
+              sourceInfo:
+                !Sub
+                  - '{"path": "https://${S3Bucket}.s3.${S3Region}.{{URLSuffix}}/{{QSS3KeyPrefix}}scripts/prepare-fci.ps1"}'
+                  - S3Bucket: !If 
+                      - UsingDefaultBucket
+                      - !Sub '${QSS3BucketName}-${AWS::Region}'
+                      - !Ref QSS3BucketName
+                    S3Region: !If 
+                      - UsingDefaultBucket
+                      - !Ref AWS::Region
+                      - !Ref QSS3BucketRegion
               commandLine: "./prepare-fci.ps1 -AdminSecret '{{AdminSecrets}}' -DomainNetBIOSName {{DomainNetBIOSName}} -SqlUserSecret {{AdminSecrets}} -MSSQLMediaBucket '{{MSSQLMediaBucketName}}' -MSSQLMediaKey '{{MSSQLMediaPathKey}}'"
         - name: "CompleteFCI"
           action: "aws:runCommand"
@@ -973,8 +1064,17 @@ Resources:
               CloudWatchLogGroupName: !Ref 'QuickStartLogs'
             Parameters:
               sourceType: "S3"
-              sourceInfo: !Sub ['{"path": "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/complete-fci.ps1"}',
-                  {QSS3Region: !If [GovCloudCondition, s3-us-gov-west-1, s3]}]
+              sourceInfo:
+                !Sub
+                  - '{"path": "https://${S3Bucket}.s3.${S3Region}.{{URLSuffix}}/{{QSS3KeyPrefix}}scripts/complete-fci.ps1"}'
+                  - S3Bucket: !If 
+                      - UsingDefaultBucket
+                      - !Sub '${QSS3BucketName}-${AWS::Region}'
+                      - !Ref QSS3BucketName
+                    S3Region: !If 
+                      - UsingDefaultBucket
+                      - !Ref AWS::Region
+                      - !Ref QSS3BucketRegion
               commandLine: "./complete-fci.ps1 -AdminSecret '{{AdminSecrets}}' -DomainNetBIOSName {{DomainNetBIOSName}} -FileServerPath '{{FindFSxVolDnsAddress.FSxDnsAddress}}'.split(';')[0] -Node1FciIp '{{FindSecondaryIpAddresses.SecondaryPrivateIpAddresses}}'.split(';')[1] -Node1SubnetMask '{{FindSecondaryIpAddresses.SecondaryPrivateIpAddresses}}'.split(';')[4] -Node2FciIp '{{FindSecondaryIpAddresses.SecondaryPrivateIpAddresses}}'.split(';')[3] -Node2SubnetMask '{{FindSecondaryIpAddresses.SecondaryPrivateIpAddresses}}'.split(';')[5] -FCIName {{SqlFSxFCIName}} -SQLAdminAccounts '{{SQLAdminAccounts}}'"              
         #End of deployment workflow
         
@@ -1089,6 +1189,12 @@ Resources:
             - ' -Parameter @{'
             - '"SqlFSxInstanceId"='
             - "$instanceId"
+            - ';"URLSuffix"='
+            - !Sub '"${AWS::URLSuffix}"'
+            - ';"QSS3BucketName"='
+            - !Sub '"${QSS3BucketName}"'
+            - ';"QSS3KeyPrefix"='
+            - !Sub '"${QSS3KeyPrefix}"'
             - ';"AutomationAssumeRole"='
             - !Sub '"arn:aws:iam::${AWS::AccountId}:role/${AWSQuickstartSqlFSxRole}"'
             - '}'
@@ -1154,13 +1260,7 @@ Resources:
           - Action:
             - s3:GetObject
             Resource:
-              Fn::Sub:
-              - arn:${Partition}:s3:::${QSS3BucketName}/${QSS3KeyPrefix}*
-              - Partition:
-                  Fn::If:
-                  - GovCloudCondition
-                  - aws-us-gov
-                  - aws
+            - !Sub ['arn:${AWS::Partition}:s3:::${S3Bucket}/${QSS3KeyPrefix}*', S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]]
             Effect: Allow
           - Action:
             - s3:*
