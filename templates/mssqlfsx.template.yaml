@@ -554,6 +554,17 @@ Resources:
             default: !Sub "${WindowsVersion}"
             description: "The AMI used to deploy SqlFSx instance."
             type: "String"
+          URLSuffix:
+            description: "AWS URL suffix"
+            type: "String"
+          QSS3BucketName:
+            default: "aws-quickstart"
+            description: "S3 bucket name for the Quick Start assets. Quick Start bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-)."
+            type: "String"
+          QSS3KeyPrefix:
+            default: "quickstart-microsoft-sql/"
+            description: "S3 key prefix for the Quick Start assets. Quick Start key prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slash (/)."
+            type: "String"
         mainSteps:
         #Getting cluster infrastructure resources
         - name: FindFSxVolDnsAddress
@@ -1174,6 +1185,12 @@ Resources:
             - ' -Parameter @{'
             - '"SqlFSxInstanceId"='
             - "$instanceId"
+            - ';"URLSuffix"='
+            - !Sub '"${AWS::URLSuffix}"'
+            - ';"QSS3BucketName"='
+            - !Sub '"${QSS3BucketName}"'
+            - ';"QSS3KeyPrefix"='
+            - !Sub '"${QSS3KeyPrefix}"'
             - ';"AutomationAssumeRole"='
             - !Sub '"arn:aws:iam::${AWS::AccountId}:role/${AWSQuickstartSqlFSxRole}"'
             - '}'
