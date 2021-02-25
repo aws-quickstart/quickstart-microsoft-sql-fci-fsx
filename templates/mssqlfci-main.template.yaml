@@ -512,70 +512,62 @@ Resources:
         RDGWInstanceType: !Ref 'RDGWInstanceType'
         RDGWCIDR: !Ref 'RDGWCIDR'
         VPCID: !GetAtt 'VPCStack.Outputs.VPCID'
-  SQLMADStack:
+  SQLStack:
     Type: AWS::CloudFormation::Stack
-    Condition: AWSManagedAD
     Properties:
       TemplateURL: !Sub
-        - 'https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}templates/mssqlfsx-mad.template.yaml'
-        - S3Region: !If [UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion]
+        - 'https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}templates/${SQLTemplate}'
+        - SQLTemplate: !If [AWSManagedAD, mssqlfsx-mad.template.yaml, mssqlfsx.template.yaml]
+          S3Region: !If [UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion]
           S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
-      Parameters:
-        VPCID: !GetAtt 'VPCStack.Outputs.VPCID'
-        PrivateSubnet1ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet1AID'
-        PrivateSubnet2ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet2AID'
-        DirectoryId: !GetAtt 'ADStack.Outputs.DirectoryID'
-        DomainDNSName: !Ref 'DomainDNSName'
-        DomainMemberSGID: !GetAtt 'ADStack.Outputs.DomainMemberSGID'
-        DomainNetBIOSName: !Ref 'DomainNetBIOSName'
-        DomainAdminUser: admin
-        DomainAdminPassword: !Ref 'DomainAdminPassword'
-        ADDnsIpAddresses: !Join [',', [!GetAtt 'ADStack.Outputs.ADServer1PrivateIP', !GetAtt 'ADStack.Outputs.ADServer2PrivateIP']]
-        SqlFSxServerNetBIOSName1: !Ref 'SqlFSxServerNetBIOSName1'
-        SqlFSxServerNetBIOSName2: !Ref 'SqlFSxServerNetBIOSName2'
-        KeyPairName: !Ref 'KeyPairName'
-        WindowsVersion: !Ref 'WindowsVersion'
-        WorkloadInstanceType: !Ref 'WorkloadInstanceType'
-        FileShareVolumeSize: !Ref 'FileShareVolumeSize'
-        FileShareThroughputCapacity: !Ref 'FileShareThroughputCapacity'
-        MSSQLMediaBucketName: !Ref 'MSSQLMediaBucketName'
-        MSSQLMediaPathKey: !Ref 'MSSQLMediaPathKey'
-        SqlFSxWSFCName: !Ref 'SqlFSxWSFCName'
-        SqlFSxFCIName: !Ref 'SqlFSxFCIName'
-        SQLAdminAccounts: !Ref 'SQLAdminAccounts'
-        QSS3BucketName: !Ref 'QSS3BucketName'
-        QSS3BucketRegion: !Ref 'QSS3BucketRegion'
-        QSS3KeyPrefix: !Ref 'QSS3KeyPrefix'
-  SQLSelfADStack:
-    Type: AWS::CloudFormation::Stack
-    Condition: SelfManagedAD
-    Properties:
-      TemplateURL: !Sub
-        - 'https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}templates/mssqlfsx.template.yaml'
-        - S3Region: !If [UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion]
-          S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
-      Parameters:
-        VPCID: !GetAtt 'VPCStack.Outputs.VPCID'
-        PrivateSubnet1ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet1AID'
-        PrivateSubnet2ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet2AID'
-        DomainDNSName: !Ref 'DomainDNSName'
-        DomainMemberSGID: !GetAtt 'ADStack.Outputs.DomainMemberSGID'
-        DomainNetBIOSName: !Ref 'DomainNetBIOSName'
-        DomainAdminUser: admin
-        DomainAdminPassword: !Ref 'DomainAdminPassword'
-        ADDnsIpAddresses: !Join [',', [!GetAtt 'ADStack.Outputs.ADServer1PrivateIP', !GetAtt 'ADStack.Outputs.ADServer2PrivateIP']]
-        SqlFSxServerNetBIOSName1: !Ref 'SqlFSxServerNetBIOSName1'
-        SqlFSxServerNetBIOSName2: !Ref 'SqlFSxServerNetBIOSName2'
-        KeyPairName: !Ref 'KeyPairName'
-        WindowsVersion: !Ref 'WindowsVersion'
-        WorkloadInstanceType: !Ref 'WorkloadInstanceType'
-        FileShareVolumeSize: !Ref 'FileShareVolumeSize'
-        FileShareThroughputCapacity: !Ref 'FileShareThroughputCapacity'
-        MSSQLMediaBucketName: !Ref 'MSSQLMediaBucketName'
-        MSSQLMediaPathKey: !Ref 'MSSQLMediaPathKey'
-        SqlFSxWSFCName: !Ref 'SqlFSxWSFCName'
-        SqlFSxFCIName: !Ref 'SqlFSxFCIName'
-        SQLAdminAccounts: !Ref 'SQLAdminAccounts'
-        QSS3BucketName: !Ref 'QSS3BucketName'
-        QSS3BucketRegion: !Ref 'QSS3BucketRegion'
-        QSS3KeyPrefix: !Ref 'QSS3KeyPrefix'
+      Parameters: !If
+        - AWSManagedAD
+        - VPCID: !GetAtt 'VPCStack.Outputs.VPCID'
+          PrivateSubnet1ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet1AID'
+          PrivateSubnet2ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet2AID'
+          DirectoryId: !GetAtt 'ADStack.Outputs.DirectoryID'
+          DomainDNSName: !Ref 'DomainDNSName'
+          DomainMemberSGID: !GetAtt 'ADStack.Outputs.DomainMemberSGID'
+          DomainNetBIOSName: !Ref 'DomainNetBIOSName'
+          DomainAdminUser: admin
+          DomainAdminPassword: !Ref 'DomainAdminPassword'
+          ADDnsIpAddresses: !Join [',', [!GetAtt 'ADStack.Outputs.ADServer1PrivateIP', !GetAtt 'ADStack.Outputs.ADServer2PrivateIP']]
+          SqlFSxServerNetBIOSName1: !Ref 'SqlFSxServerNetBIOSName1'
+          SqlFSxServerNetBIOSName2: !Ref 'SqlFSxServerNetBIOSName2'
+          KeyPairName: !Ref 'KeyPairName'
+          WindowsVersion: !Ref 'WindowsVersion'
+          WorkloadInstanceType: !Ref 'WorkloadInstanceType'
+          FileShareVolumeSize: !Ref 'FileShareVolumeSize'
+          FileShareThroughputCapacity: !Ref 'FileShareThroughputCapacity'
+          MSSQLMediaBucketName: !Ref 'MSSQLMediaBucketName'
+          MSSQLMediaPathKey: !Ref 'MSSQLMediaPathKey'
+          SqlFSxWSFCName: !Ref 'SqlFSxWSFCName'
+          SqlFSxFCIName: !Ref 'SqlFSxFCIName'
+          SQLAdminAccounts: !Ref 'SQLAdminAccounts'
+          QSS3BucketName: !Ref 'QSS3BucketName'
+          QSS3BucketRegion: !Ref 'QSS3BucketRegion'
+          QSS3KeyPrefix: !Ref 'QSS3KeyPrefix'
+        - VPCID: !GetAtt 'VPCStack.Outputs.VPCID'
+          PrivateSubnet1ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet1AID'
+          PrivateSubnet2ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet2AID'
+          DomainDNSName: !Ref 'DomainDNSName'
+          DomainMemberSGID: !GetAtt 'ADStack.Outputs.DomainMemberSGID'
+          DomainNetBIOSName: !Ref 'DomainNetBIOSName'
+          DomainAdminUser: admin
+          DomainAdminPassword: !Ref 'DomainAdminPassword'
+          ADDnsIpAddresses: !Join [',', [!Ref ADServer1PrivateIP, !Ref ADServer2PrivateIP]]
+          SqlFSxServerNetBIOSName1: !Ref 'SqlFSxServerNetBIOSName1'
+          SqlFSxServerNetBIOSName2: !Ref 'SqlFSxServerNetBIOSName2'
+          KeyPairName: !Ref 'KeyPairName'
+          WindowsVersion: !Ref 'WindowsVersion'
+          WorkloadInstanceType: !Ref 'WorkloadInstanceType'
+          FileShareVolumeSize: !Ref 'FileShareVolumeSize'
+          FileShareThroughputCapacity: !Ref 'FileShareThroughputCapacity'
+          MSSQLMediaBucketName: !Ref 'MSSQLMediaBucketName'
+          MSSQLMediaPathKey: !Ref 'MSSQLMediaPathKey'
+          SqlFSxWSFCName: !Ref 'SqlFSxWSFCName'
+          SqlFSxFCIName: !Ref 'SqlFSxFCIName'
+          SQLAdminAccounts: !Ref 'SQLAdminAccounts'
+          QSS3BucketName: !Ref 'QSS3BucketName'
+          QSS3BucketRegion: !Ref 'QSS3BucketRegion'
+          QSS3KeyPrefix: !Ref 'QSS3KeyPrefix'
