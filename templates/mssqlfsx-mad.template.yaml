@@ -857,7 +857,7 @@ Resources:
             Parameters:
               directoryId: "{{DirectoryId}}"
               directoryName: "{{DomainDNSName}}"
-              #dnsIpAddresses: "{{ADDnsIpAddresses}}"
+              dnsIpAddresses: !Select [0, !Split [",", !Ref ADDnsIpAddresses]]
         - name: "EnableCredSSP"
           action: "aws:runCommand"
           onFailure: "step:signalfailure"
@@ -1019,7 +1019,7 @@ Resources:
               sourceType: "S3"
               sourceInfo:
                 !Sub
-                  - '{"path": "https://${S3Bucket}.s3.${S3Region}.{{URLSuffix}}/{{QSS3KeyPrefix}}scripts/Configure-MAD-Permissions"}'
+                  - '{"path": "https://${S3Bucket}.s3.${S3Region}.{{URLSuffix}}/{{QSS3KeyPrefix}}scripts/Configure-MAD-Permissions.ps1"}'
                   - S3Bucket: !If 
                       - UsingDefaultBucket
                       - !Sub '${QSS3BucketName}-${AWS::Region}'
@@ -1150,11 +1150,8 @@ Resources:
           Ref: PrivateSubnet1ID
         SecondaryPrivateIpAddressCount: 2
         GroupSet:
-          Fn::If:
-          - ADSGNotSelected
-          - - Ref: WorkloadSecurityGroup
-          - - Ref: DomainMemberSGID
-            - Ref: WorkloadSecurityGroup
+          - Ref: DomainMemberSGID
+          - Ref: WorkloadSecurityGroup
       Tags:
       - Key: Name
         Value:
@@ -1217,11 +1214,8 @@ Resources:
           Ref: PrivateSubnet2ID
         SecondaryPrivateIpAddressCount: 2           
         GroupSet:
-          Fn::If:
-          - ADSGNotSelected
-          - - Ref: WorkloadSecurityGroup
-          - - Ref: DomainMemberSGID
-            - Ref: WorkloadSecurityGroup
+          - Ref: DomainMemberSGID
+          - Ref: WorkloadSecurityGroup
       Tags:
       - Key: Name
         Value:
@@ -1330,17 +1324,17 @@ Resources:
       Timeout: "7200"
       Count: 1
   WorkloadSecurityGroup:  
-  #Remove after dev phase. Users can select their own pre-existing SG.
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupDescription: Allow access to the Workload instances
-      VpcId:
-        Ref: VPCID
-      SecurityGroupIngress:
-      - IpProtocol: '-1'
-        FromPort: '-1'
-        ToPort: '-1'
-        CidrIp: 10.0.0.0/8
+   Type: AWS::EC2::SecurityGroup
+   Properties:
+     GroupDescription: Allow access to the Workload instances
+     VpcId:
+       Ref: VPCID
+     SecurityGroupIngress:
+     - IpProtocol: '-1'
+       FromPort: '-1'
+       ToPort: '-1'
+       CidrIp: 
+         Ref: VPCcidr
   FSxWindowsFileSystem:
     Type: 'AWS::FSx::FileSystem'
     Properties:
@@ -1352,7 +1346,7 @@ Resources:
         - Ref: PrivateSubnet1ID
         - Ref: PrivateSubnet2ID
       SecurityGroupIds:
-        - Ref: WorkloadSecurityGroup
+        - Ref: DomainMemberSGID
       Tags:
         - Key: Name
           Value: SqlFSxFileSystem
