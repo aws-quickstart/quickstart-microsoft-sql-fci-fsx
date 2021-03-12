@@ -10,6 +10,7 @@ Metadata:
         default: Network Configuration
       Parameters:
       - VPCID
+      - VPCcidr
       - PrivateSubnet1ID
       - PrivateSubnet2ID
     - Label:
@@ -63,6 +64,8 @@ Metadata:
         default: Quick Start S3 Key Prefix
       VPCID:
         default: VPC ID
+      VPCcidr:
+        default: 10.0.0.0/8
       WorkloadInstanceType:
         default: Workload Servers Instance Type
       DomainAdminPassword:
@@ -144,6 +147,9 @@ Parameters:
   VPCID:
     Description: ID of your existing VPC for deployment
     Type: AWS::EC2::VPC::Id
+  VPCcidr:
+    Description: CIDR of your existing VPC
+    Type: String
   SqlFSxServerNetBIOSName1:
     AllowedPattern: "[a-zA-Z0-9\\-]+"
     Default: SqlFSx1
@@ -1146,11 +1152,8 @@ Resources:
           Ref: PrivateSubnet1ID
         SecondaryPrivateIpAddressCount: 2
         GroupSet:
-          Fn::If:
-          - ADSGNotSelected
-          - - Ref: WorkloadSecurityGroup
-          - - Ref: DomainMemberSGID
-            - Ref: WorkloadSecurityGroup
+          - Ref: DomainMemberSGID
+          - Ref: WorkloadSecurityGroup
       Tags:
       - Key: Name
         Value:
@@ -1214,11 +1217,8 @@ Resources:
           Ref: PrivateSubnet2ID
         SecondaryPrivateIpAddressCount: 2           
         GroupSet:
-          Fn::If:
-          - ADSGNotSelected
-          - - Ref: WorkloadSecurityGroup
-          - - Ref: DomainMemberSGID
-            - Ref: WorkloadSecurityGroup
+          - Ref: DomainMemberSGID
+          - Ref: WorkloadSecurityGroup
       Tags:
       - Key: Name
         Value:
@@ -1318,17 +1318,17 @@ Resources:
       Timeout: "7200"
       Count: 1
   WorkloadSecurityGroup:  
-  #Remove after dev phase. Users can select their own pre-existing SG.
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupDescription: Allow access to the Workload instances
-      VpcId:
-        Ref: VPCID
-      SecurityGroupIngress:
-      - IpProtocol: '-1'
-        FromPort: '-1'
-        ToPort: '-1'
-        CidrIp: 10.0.0.0/8
+   Type: AWS::EC2::SecurityGroup
+   Properties:
+     GroupDescription: Allow access to the Workload instances
+     VpcId:
+       Ref: VPCID
+     SecurityGroupIngress:
+     - IpProtocol: '-1'
+       FromPort: '-1'
+       ToPort: '-1'
+       CidrIp: 
+         Ref: VPCcidr
   FSxWindowsFileSystem:
     Type: 'AWS::FSx::FileSystem'
     Properties:
@@ -1341,6 +1341,7 @@ Resources:
         - Ref: PrivateSubnet2ID
       SecurityGroupIds:
         - Ref: WorkloadSecurityGroup
+        - Ref: DomainMemberSGID
       Tags:
         - Key: Name
           Value: SqlFSxFileSystem

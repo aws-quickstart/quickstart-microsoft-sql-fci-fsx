@@ -528,6 +528,7 @@ Resources:
           DirectoryId: !GetAtt 'ADStack.Outputs.DirectoryID'
           DomainDNSName: !Ref 'DomainDNSName'
           DomainMemberSGID: !GetAtt 'ADStack.Outputs.DomainMemberSGID'
+          VPCcidr: !Ref 'VPCCIDR'
           DomainNetBIOSName: !Ref 'DomainNetBIOSName'
           DomainAdminUser: admin
           DomainAdminPassword: !Ref 'DomainAdminPassword'
@@ -552,6 +553,7 @@ Resources:
           PrivateSubnet2ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet2AID'
           DomainDNSName: !Ref 'DomainDNSName'
           DomainMemberSGID: !GetAtt 'ADStack.Outputs.DomainMemberSGID'
+          VPCcidr: !Ref 'VPCCIDR'
           DomainNetBIOSName: !Ref 'DomainNetBIOSName'
           DomainAdminUser: admin
           DomainAdminPassword: !Ref 'DomainAdminPassword'
