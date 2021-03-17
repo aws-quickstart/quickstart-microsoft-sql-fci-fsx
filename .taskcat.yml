@@ -19,8 +19,9 @@ project:
   - us-west-2
   s3_bucket: ''
 tests:
-  mssql-ds:
+  mssql-ec2ad:
     parameters:
+      ADScenarioType: 'Microsoft AD on Amazon EC2'
       AvailabilityZones: $[taskcat_getaz_2]
       DomainAdminPassword: $[taskcat_genpass_16]
       KeyPairName: $[taskcat_getkeypair]
@@ -29,9 +30,26 @@ tests:
       NumberOfRDGWHosts: '0'
       RDGWCIDR: 0.0.0.0/0
       SQLServiceAccountPassword: $[taskcat_genpass_16]
-      MSSQLMediaBucketName: davmayd2
+      MSSQLMediaBucketName: override
       MSSQLMediaPathKey: SQLServer2019-x64-ENU.iso
     regions:
     - us-east-1
+    s3_bucket: ''
+    template: templates/mssqlfci-main.template.yaml
+  mssql-mad:
+    parameters:
+      ADScenarioType: 'AWS Directory Service for Microsoft AD (Enterprise Edition)'
+      AvailabilityZones: $[taskcat_getaz_2]
+      DomainAdminPassword: $[taskcat_genpass_16]
+      KeyPairName: $[taskcat_getkeypair]
+      QSS3BucketName: $[taskcat_autobucket]
+      QSS3BucketRegion: $[taskcat_current_region]
+      NumberOfRDGWHosts: '0'
+      RDGWCIDR: 0.0.0.0/0
+      SQLServiceAccountPassword: $[taskcat_genpass_16]
+      MSSQLMediaBucketName: override
+      MSSQLMediaPathKey: SQLServer2019-x64-ENU.iso
+    regions:
+    - us-east-2
     s3_bucket: ''
     template: templates/mssqlfci-main.template.yaml
