@@ -1,0 +1,57 @@
+
+.Network Configuration
+[width="100%",cols="16%,11%,73%",options="header",]
+|===
+|Parameter label (name) |Default value|Description|VPC ID
+(`VPCID`)|`**__Requires input__**`|ID of your existing VPC for deployment|Private Subnet 1 ID
+(`PrivateSubnet1ID`)|`**__Requires input__**`|ID of private subnet 1 in Availability Zone 1 for the Workload (e.g., subnet-a0246dcd)|Private Subnet 2 ID
+(`PrivateSubnet2ID`)|`**__Requires input__**`|ID of private subnet 2 in Availability Zone 2 for the Workload (e.g., subnet-a0246dcd)|VPC CIDR
+(`VPCcidr`)|`10.0.0.0/16`|CIDR block for the VPC.
+|===
+.Microsoft Active Directory Configuration
+[width="100%",cols="16%,11%,73%",options="header",]
+|===
+|Parameter label (name) |Default value|Description|Domain DNS Name
+(`DomainDNSName`)|`example.com`|Fully qualified domain name (FQDN) e.g. example.com|Domain NetBIOS Name
+(`DomainNetBIOSName`)|`EXAMPLE`|NetBIOS name of the domain (up to 15 characters) for users of earlier versions of Windows e.g. EXAMPLE|Domain Admin User Name
+(`DomainAdminUser`)|`StackAdmin`|User name for the account that will be used as Domain Administrator. This is separate from the default "Administrator" account|Domain Admin Password
+(`DomainAdminPassword`)|`**__Requires input__**`|Password for the domain admin user.|Security Group ID for AD Domain Members
+(`DomainMemberSGID`)|`**__Requires input__**`|ID of the Domain Member Security Group (e.g., sg-9cb7d0e5)|**NO_LABEL**
+(`ADDnsIpAddresses`)|`**__Requires input__**`|DNS IP addresses. Comma-separated.|The ID of the AWS Directory Service directory.
+(`DirectoryId`)|`**__Requires input__**`|The ID of the AWS Directory Service directory.
+|===
+.Amazon EC2 Configuration
+[width="100%",cols="16%,11%,73%",options="header",]
+|===
+|Parameter label (name) |Default value|Description|Server1 NetBIOS Name
+(`SqlFSxServerNetBIOSName1`)|`SqlFSx1`|NetBIOS name of the SQL server (up to 15 characters)|Server2 NetBIOS Name
+(`SqlFSxServerNetBIOSName2`)|`SqlFSx2`|NetBIOS name of the SQL server (up to 15 characters)|SSH Key Name
+(`KeyPairName`)|`**__Requires input__**`|Name of an existing EC2 key pair. All instances will launch with this key pair.|Windows version
+(`WindowsVersion`)|`Windows_Server-2019-English-Full-Base*`|Select Windows version to run SQL Server.|Workload Servers Instance Type
+(`WorkloadInstanceType`)|`r5.2xlarge`|Type of EC2 instance for the Workload instances
+|===
+.Amazon FSx Windows File Share Configuration
+[width="100%",cols="16%,11%,73%",options="header",]
+|===
+|Parameter label (name) |Default value|Description|File share volume size
+(`FileShareVolumeSize`)|`32`|Capacity of the volume used to store SQL Server files. Minimum value is 32 and maximum 65536. (GB)|File share throughput capacity (MB/s)
+(`FileShareThroughputCapacity`)|`8`|File share throughput capacity, in 2 to the n'th power increments, where 3 <= n <= 11, i.e. (between 2^3 and 2^11).
+|===
+.Microsoft SQL Server FCI configurations
+[width="100%",cols="16%,11%,73%",options="header",]
+|===
+|Parameter label (name) |Default value|Description|**NO_LABEL**
+(`MSSQLMediaBucketName`)|`ss-experiments`|The S3 bucket name wherefrom MSSQL media can be downloaded. This string can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-).|**NO_LABEL**
+(`MSSQLMediaPathKey`)|`quickstart-microsoft-SqlFSx/sql-installation-media/en_sql_server_2019_developer_x64_dvd_baea4195.iso`|The S3 bucket key wherefrom MSSQL media can be downloaded. This string can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slash (/).|**NO_LABEL**
+(`SqlFSxWSFCName`)|`WSFC1`|Windows Server failover cluster name|**NO_LABEL**
+(`SqlFSxFCIName`)|`SqlFCI`|FCI name|**NO_LABEL**
+(`SQLAdminAccounts`)|`contoso\Administrator`|Comma-separated user names will be used as MSSQL DB Administrator. It could be AD domain admin, other local or domain users.
+|===
+.AWS Quick Start Configuration
+[width="100%",cols="16%,11%,73%",options="header",]
+|===
+|Parameter label (name) |Default value|Description|Quick Start S3 Bucket Name
+(`QSS3BucketName`)|`aws-quickstart`|S3 bucket name for the Quick Start assets. This string can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-).|Quick Start S3 bucket region
+(`QSS3BucketRegion`)|`us-east-1`|The AWS Region where the Quick Start S3 bucket (QSS3BucketName) is hosted. When using your own bucket, you must specify this value.|Quick Start S3 Key Prefix
+(`QSS3KeyPrefix`)|`quickstart-microsoft-SqlFSx/`|S3 key prefix for the Quick Start assets. Quick Start key prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slash (/).
+|===

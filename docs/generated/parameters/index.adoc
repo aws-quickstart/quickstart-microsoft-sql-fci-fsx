@@ -1,1 +1,9 @@
-// placeholder
+
+=== Launch into a new VPC
+include::mssqlfci-main.template.adoc[]
+
+=== Launch with AWS managed directory service into an existing VPC
+include::mssqlfsx-mad.template.adoc[]
+
+=== Launch with self-managed Active Directory into an existing VPC
+include::mssqlfsx.template.adoc[]

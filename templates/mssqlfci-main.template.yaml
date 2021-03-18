@@ -425,7 +425,6 @@ Parameters:
 Conditions:
   UsingDefaultBucket: !Equals [!Ref QSS3BucketName, 'aws-quickstart']
   AWSManagedAD: !Equals [!Ref ADScenarioType, 'AWS Directory Service for Microsoft AD (Enterprise Edition)']
-  SelfManagedAD: !Equals [!Ref ADScenarioType, 'Microsoft AD on Amazon EC2']
   IncludeRDGW: !Not
     - !Equals
       - !Ref NumberOfRDGWHosts

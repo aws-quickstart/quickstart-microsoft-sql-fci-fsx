@@ -2,4 +2,21 @@
 // Briefly describe the software. Use consistent and clear branding. 
 // Include the benefits of using the software on AWS, and provide details on usage scenarios.
 
-<Describe how the software works on AWS.>
+// Replace the content in <>
+// Briefly describe the software. Use consistent and clear branding. 
+// Include the benefits of using the software on AWS, and provide details on usage scenarios.
+
+This Quick Start implements a highly available environment that includes Windows Server and SQL Server running on Amazon Elastic Compute Cloud (Amazon EC2), using the https://docs.microsoft.com/en-us/sql/sql-server/failover-clusters/windows/always-on-failover-cluster-instances-sql-server?view=sql-server-ver15[Always On failover cluster instance feature] of SQL Server 2019. This infrastructure provides the underpinnings for many Microsoft technology-based solutions for the enterprise, including SharePoint and .NET Framework applications.
+
+The automation in this deployment uses AWS Systems Manager Automation, AWS CloudFormation, and Windows PowerShell Desired State Configuration (DSC) to deploy a multi-node SQL Always On failover instance cluster. A prerequisite for deploying a SQL Server Always On failover instance cluster is Windows Server Failover Clustering (WSFC). SQL Server uses WSFC to increase application availability. WSFC provides infrastructure features that complement the high availability and disaster recovery scenarios supported in the AWS Cloud.
+
+Implementing WSFC in the AWS Cloud is very similar to deploying it in an on-premises setting as long as you meet two key recommendations:
+
+* You must deploy the cluster nodes inside a virtual private cloud (VPC).
+* We recommend that you deploy the cluster nodes in separate subnets to provide high availability across multiple Availability Zones.
+
+This Quick Start provides an automated deployment of WSFC that meets these requirements and handles the configuration steps for you.
+
+This guide provides step-by-step instructions for deploying a reference architecture for SQL Server on AWS. It doesn’t provide general configuration and usage information for WSFC and SQL Server. For general guidance and best practices, consult the Microsoft product documentation and the https://d1.awsstatic.com/whitepapers/best-practices-for-deploying-microsoft-sql-server-on-aws.pdf[Best Practices for Deploying Microsoft SQL Server on AWS] whitepaper.
+
+This Quick Start supports SQL Server 2019 running on Windows Server 2019.

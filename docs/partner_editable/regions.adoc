@@ -1,6 +1,14 @@
-This Quick Start supports the following Regions:
+https://aws.amazon.com/about-aws/global-infrastructure/[Regions]
 
-* us-east-1, US East (N. Virginia) (EXAMPLE)
-* us-east-2, US East (Ohio) (EXAMPLE)
+This deployment includes AWS Secrets Manager, which isn’t currently supported in all AWS Regions. For a current list of supported regions, see https://docs.aws.amazon.com/general/latest/gr/asm.html[Service Endpoints and Quotas] in the AWS documentation.
 
-//Full list: https://docs.aws.amazon.com/general/latest/gr/rande.html
+This deployment also uses an AWS FSx multi-AZ file system, which is availabile in the following Regions:
+
+* US East (N. Virginia)
+* US East (Ohio)
+* US West (Oregon)
+* Europe (Ireland)
+* Europe (London)
+* Asia Pacific (Tokyo)
+* Asia Pacific (Singapore)
+* Europe (Stockholm) Regions

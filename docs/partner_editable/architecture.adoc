@@ -16,12 +16,15 @@ best practices, to provide you with your own virtual network on AWS.*
 * In the public subnets:
 ** Managed network address translation (NAT) gateways to allow outbound
 internet access for resources in the private subnets.*
-** A Linux bastion host in an Auto Scaling group to allow inbound Secure
-Shell (SSH) access to EC2 instances in public and private subnets.*
+** A Remote Desktop Gateway host in an Auto Scaling group to allow inbound Remote
+Desktop (RDP) access to EC2 instances in public and private subnets.*
 * In the private subnets:
-** <item>.
-** <item>.
+** An AWS managed directory.
+** Two EC2 instances running Microsoft Windows with SQL Server installed in a failover cluster instance configuration.
+** An FSx file share to act as the failover cluster witness.
+
 // Add bullet points for any additional components that are included in the deployment. Make sure that the additional components are also represented in the architecture diagram. End each bullet with a period.
-* <describe any additional components>.
+* AWS Secrets Manager keys to store credentials.
+* An AWS Systems Manager automation document to automate the deployment.
 
 [.small]#*The template that deploys the Quick Start into an existing VPC skips the components marked by asterisks and prompts you for your existing VPC configuration.#

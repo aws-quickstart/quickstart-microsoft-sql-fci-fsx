@@ -4,6 +4,9 @@ Description: This workload template deploys a SqlFSx instance in an existing VPC
   This template creates EC2 instances and related resources. You will be billed for
   the AWS resources used if you create a stack from this template.
 Metadata:
+  QuickStartDocumentation:
+    EntrypointName: "Launch with self-managed Active Directory into an existing VPC"
+    Order: "3"
   AWS::CloudFormation::Interface:
     ParameterGroups:
     - Label:
@@ -94,13 +97,13 @@ Parameters:
       this key pair.
     Type: AWS::EC2::KeyPair::KeyName
   FileShareVolumeSize:
-    Default: '32'
+    Default: 32
     Description: Capacity of the volume used to store SQL Server files. Minimum value is 32 and maximum 65536. (GB)
     Type: Number
     MinValue: 32
     MaxValue: 65536
   FileShareThroughputCapacity:
-    Default: '8'
+    Default: 8
     Description: File share throughput capacity, in 2 to the n'th power increments, where 3 <= n <= 11, i.e. (between 2^3 and 2^11).
     Type: Number
     AllowedValues: 
@@ -148,7 +151,10 @@ Parameters:
     Description: ID of your existing VPC for deployment
     Type: AWS::EC2::VPC::Id
   VPCcidr:
-    Description: CIDR of your existing VPC
+    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+    Default: 10.0.0.0/16
+    Description: CIDR block for the VPC.
     Type: String
   SqlFSxServerNetBIOSName1:
     AllowedPattern: "[a-zA-Z0-9\\-]+"
@@ -269,14 +275,6 @@ Parameters:
     MinLength: '5'
     Type: String    
 Conditions:
-  GovCloudCondition:
-    Fn::Equals:
-    - Ref: AWS::Region
-    - us-gov-west-1
-  ADSGNotSelected:
-    Fn::Equals:
-    - Ref: DomainMemberSGID
-    - ""
   UsingDefaultBucket: !Equals [!Ref QSS3BucketName, 'aws-quickstart']
 Rules:
   KeyPairsNotEmpty:
@@ -1170,7 +1168,6 @@ Resources:
           VolumeType: gp2
       KeyName:
         Ref: KeyPairName
-      UserData:
       UserData: !Base64
         Fn::Join:
           - ''
@@ -1235,7 +1232,6 @@ Resources:
           VolumeType: gp2
       KeyName:
         Ref: KeyPairName
-      UserData:
       UserData: !Base64
         Fn::Join:
           - ''
