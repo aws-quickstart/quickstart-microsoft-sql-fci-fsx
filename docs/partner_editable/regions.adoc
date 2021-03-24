@@ -11,4 +11,5 @@ This deployment also uses an AWS FSx multi-AZ file system, which is availabile i
 * Europe (London)
 * Asia Pacific (Tokyo)
 * Asia Pacific (Singapore)
+* Asia Pacific (Sydney)
 * Europe (Stockholm) Regions

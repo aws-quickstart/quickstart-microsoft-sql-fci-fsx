@@ -4,4 +4,4 @@
 
 This Quick Start deployment guide provides step-by-step instructions for deploying SQL Server on the AWS Cloud, using http://aws.amazon.com/cloudformation/[AWS CloudFormation] templates and https://docs.aws.amazon.com/systems-manager/latest/userguide/automation-documents.html[AWS Systems Manager Automation documents] that automate the deployment.
 
-This Quick Start is for IT infrastructure architects, administrators, and DevOps professionals who are planning to implement or extend their Windows Server Failover Clustering (WSFC) and SQL Server workloads on AWS.
+This Quick Start is for IT infrastructure architects, database administrators, and DevOps professionals who are planning to implement or extend Microsoft SQL Server using Windows Server Failover Clustering (WSFC) on AWS. {partner-product-short-name} requires shared storage that is accessible by all nodes within the cluster. This template uses a highly-available Multi-AZ Amazon FSx file system as the network share used to store MSSQL database files. Both the FSx file system and EC2 Windows instances that host {partner-product-short-name} nodes are joined to the same Active Directory domain.
