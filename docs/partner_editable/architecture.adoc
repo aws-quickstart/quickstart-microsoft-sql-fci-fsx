@@ -19,9 +19,9 @@ internet access for resources in the private subnets.*
 ** A Remote Desktop Gateway host in an Auto Scaling group to allow inbound Remote
 Desktop (RDP) access to EC2 instances in public and private subnets.*
 * In the private subnets:
-** An AWS managed directory.
-** Two EC2 instances running Microsoft Windows with SQL Server installed in a failover cluster instance configuration.
-** An FSx file share to act as the failover cluster witness.
+** An AWS managed directory.*
+** Two EC2 instances running Microsoft Windows with SQL Server installed in a FCI configuration.
+** Two FSx file shares. One for user database storage and other act as the failover cluster witness.
 
 // Add bullet points for any additional components that are included in the deployment. Make sure that the additional components are also represented in the architecture diagram. End each bullet with a period.
 * AWS Secrets Manager keys to store credentials.
