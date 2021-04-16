@@ -15,10 +15,8 @@ As shown in <<architecture1>>, the Quick Start sets up the following:
 ** A Remote Desktop Gateway (RD Gateway) host in an Auto Scaling group to allow inbound Remote Desktop Protocol (RDP) access to EC2 instances in public and private subnets.*
 * In the private subnets:
 ** Two EC2 instances running Microsoft Windows with SQL Server installed in an FCI configuration.
-** An AWS managed directory (not shown).*
-** Two Amazon FSx file shares, one for user database storage and the other to act as the failover cluster witness (not shown).
-* Amazon FSx for Windows File Server to ____.
-* AWS Directory Service to ____.
+** An AWS managed directory.*
+** Two Amazon FSx file shares, one for user database storage and the other to act as the failover cluster witness.
 * AWS Secrets Manager keys to store credentials.
 * An AWS Systems Manager automation document to automate the deployment.
 

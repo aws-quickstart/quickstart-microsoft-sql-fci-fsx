@@ -3,6 +3,4 @@
 // Include links if helpful. 
 // You don't need to list AWS services or point to general info about AWS; the boilerplate already covers this.
 
-This Quick Start assumes that you're familiar with Microsoft SQL Server. For details, consult the Microsoft product documentation.
-
-//TODO Dave, I added this line. Anything else you want to say?
+This Quick Start assumes that you're familiar with Microsoft SQL Server and Always On Failover Cluster Instances. For details, consult https://docs.microsoft.com/en-us/sql/sql-server/failover-clusters/windows/always-on-failover-cluster-instances-sql-server?view=sql-server-ver15[the Microsoft product documentation].
