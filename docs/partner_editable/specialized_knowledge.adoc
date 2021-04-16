@@ -2,3 +2,7 @@
 // For example: “familiarity with basic concepts in networking, database operations, and data encryption” or “familiarity with <software>.”
 // Include links if helpful. 
 // You don't need to list AWS services or point to general info about AWS; the boilerplate already covers this.
+
+This Quick Start assumes that you're familiar with Microsoft SQL Server. For details, consult the Microsoft product documentation.
+
+//TODO Dave, I added this line. Anything else you want to say?

@@ -5,7 +5,7 @@ Description: This workload template deploys a SqlFSx instance in an existing VPC
   the AWS resources used if you create a stack from this template.
 Metadata:
   QuickStartDocumentation:
-    EntrypointName: "Launch with AWS managed directory service into an existing VPC"
+    EntrypointName: "Parameters for deploying into an existing VPC with AWS Managed Microsoft AD"
     Order: "2"
   AWS::CloudFormation::Interface:
     ParameterGroups:
