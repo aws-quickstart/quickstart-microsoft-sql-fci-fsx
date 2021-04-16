@@ -2,6 +2,13 @@
 // Identify your target audience and explain how/why they would use this Quick Start.
 //Avoid borrowing text from third-party websites (copying text from AWS service documentation is fine). Also, avoid marketing-speak, focusing instead on the technical aspect.
 
-This Quick Start deployment guide provides step-by-step instructions for deploying SQL Server on the AWS Cloud, using http://aws.amazon.com/cloudformation/[AWS CloudFormation] templates and https://docs.aws.amazon.com/systems-manager/latest/userguide/automation-documents.html[AWS Systems Manager Automation documents] that automate the deployment.
+This guide provides instructions for deploying the Quick Start reference architecture called {partner-product-name} on the AWS Cloud—for short, {partner-product-short-name}. This guide does not provide general configuration and usage information for Windows Server Failover Clustering (WSFC) and MSSQL. For general guidance and best practices, consult the Microsoft product documentation and the https://d1.awsstatic.com/whitepapers/best-practices-for-deploying-microsoft-sql-server-on-aws.pdf[Best Practices for Deploying Microsoft SQL Server on AWS^] whitepaper.
 
-This Quick Start is for IT infrastructure architects, database administrators, and DevOps professionals who are planning to implement or extend Microsoft SQL Server using Windows Server Failover Clustering (WSFC) on AWS. {partner-product-short-name} requires shared storage that is accessible by all nodes within the cluster. This template uses a highly-available Multi-AZ Amazon FSx file system as the network share used to store MSSQL database files. Both the FSx file system and EC2 Windows instances that host {partner-product-short-name} nodes are joined to the same Active Directory domain.
+This Quick Start is for IT infrastructure architects, database administrators, and DevOps professionals who plan to implement or extend Microsoft SQL Server using https://aws.amazon.com/quickstart/architecture/sql/[SQL Server on AWS^] with WSFC.
+
+SQL Server failover cluster instances have been traditionally difficult to deploy and manage. With the Multi-AZ file system option, https://aws.amazon.com/fsx/windows/[Amazon FSx for Windows File Server^] provides fully managed file storage. This storage enables the high availability and durability that's required to run business-critical Microsoft SQL Server database workloads without the need for enterprise licenses. Amazon FSx automatically handles the data replication and failover, simplifying shared storage to host your database deployments while reducing cost.
+
+For more information:
+
+* https://docs.aws.amazon.com/fsx/latest/WindowsGuide/what-is.html[What Is Amazon FSx for Windows File Server?^]
+* https://docs.aws.amazon.com/fsx/latest/WindowsGuide/sql-server.html[Using Amazon FSx for Windows File Server with Microsoft SQL Server^]

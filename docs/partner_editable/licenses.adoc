@@ -1,1 +1,5 @@
-This Quick Start requires a license for Microsoft SQL Server 2019. A trial license can be obtained from the https://www.microsoft.com/en-us/evalcenter/evaluate-sql-server-2019[Microsoft Evaluation Center]. Alternatively, you can use MSSQL Developer Edition which provides full capabilities of Enterprise Edition but does not require license costs if not using for Production environment. This Quick Start deploys MSSQL in Bring-Your-Own-License mode. It does not support deployment of MSSQL License-Included AMIs.
+This Quick Start requires a license for Microsoft SQL Server 2019. You can obtain a trial license from the https://www.microsoft.com/en-us/evalcenter/evaluate-sql-server-2019[Microsoft Evaluation Center^]. 
+
+Alternatively, if you're not using the software for a production environment, you can use the MSSQL Developer Edition. This edition provides the full capabilities of Enterprise Edition without requiring license costs. 
+
+This Quick Start deploys MSSQL in Bring-Your-Own-License mode. It does not support deployment of MSSQL license-included Amazon Machine Images (AMIs).

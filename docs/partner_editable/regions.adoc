@@ -1,8 +1,6 @@
-https://aws.amazon.com/about-aws/global-infrastructure/[Regions]
+This deployment includes AWS Secrets Manager, which isn't currently supported in all https://aws.amazon.com/about-aws/global-infrastructure/[AWS Regions^]. For the latest supported Regions, see https://docs.aws.amazon.com/general/latest/gr/asm.html[AWS Secrets Manager endpoints and quotas].
 
-This deployment includes AWS Secrets Manager, which isn’t currently supported in all AWS Regions. For a current list of supported regions, see https://docs.aws.amazon.com/general/latest/gr/asm.html[Service Endpoints and Quotas] in the AWS documentation.
-
-This deployment also uses an AWS FSx multi-AZ file system, which is availabile in the following Regions:
+This deployment also uses Amazon FSx, which is available in the following Regions:
 
 * US East (N. Virginia)
 * US East (Ohio)
@@ -12,4 +10,4 @@ This deployment also uses an AWS FSx multi-AZ file system, which is availabile i
 * Asia Pacific (Tokyo)
 * Asia Pacific (Singapore)
 * Asia Pacific (Sydney)
-* Europe (Stockholm) Regions
+* Europe (Stockholm)

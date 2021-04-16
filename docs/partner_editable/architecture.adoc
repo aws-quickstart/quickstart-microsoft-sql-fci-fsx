@@ -1,12 +1,10 @@
-Deploying this Quick Start for a new virtual private cloud (VPC) with
-default parameters builds the following {partner-product-short-name} environment in the
-AWS Cloud.
-
-// Replace this example diagram with your own. Send us your source PowerPoint file. Be sure to follow our guidelines here : http://(we should include these points on our contributors giude)
 :xrefstyle: short
+
+Deploying this Quick Start for a new VPC with default parameters builds the following environment in the AWS Cloud.
+
 [#architecture1]
 .Quick Start architecture for {partner-product-short-name} on AWS
-image::../images/architecture_diagram.png[Architecture,width=100%,height=100%]
+image::../images/ms-sql-fci-fsx-architecture_diagram.png[Architecture]
 
 As shown in <<architecture1>>, the Quick Start sets up the following:
 
@@ -14,14 +12,18 @@ As shown in <<architecture1>>, the Quick Start sets up the following:
 * A VPC configured with public and private subnets, according to AWS best practices, to provide you with your own virtual network on AWS.*
 * In the public subnets:
 ** Managed network address translation (NAT) gateways to allow outbound internet access for resources in the private subnets.*
-** A Remote Desktop Gateway host in an Auto Scaling group to allow inbound Remote Desktop (RDP) access to EC2 instances in public and private subnets.*
+** A Remote Desktop Gateway (RD Gateway) host in an Auto Scaling group to allow inbound Remote Desktop Protocol (RDP) access to EC2 instances in public and private subnets.*
 * In the private subnets:
-** An AWS managed directory.*
-** Two EC2 instances running Microsoft Windows with SQL Server installed in a FCI configuration.
-** Two FSx file shares. One for user database storage and another to act as the failover cluster witness.
-
-// Add bullet points for any additional components that are included in the deployment. Make sure that the additional components are also represented in the architecture diagram. End each bullet with a period.
+** Two EC2 instances running Microsoft Windows with SQL Server installed in an FCI configuration.
+** An AWS managed directory (not shown).*
+** Two Amazon FSx file shares, one for user database storage and the other to act as the failover cluster witness (not shown).
+* Amazon FSx for Windows File Server to ____.
+* AWS Directory Service to ____.
 * AWS Secrets Manager keys to store credentials.
 * An AWS Systems Manager automation document to automate the deployment.
 
 [.small]#*The template that deploys the Quick Start into an existing VPC skips the components marked by asterisks and prompts you for your existing VPC configuration.#
+
+//TODO Dave, Please fill in the two blanks above.
+
+//TODO Dave, I added "(not shown)" to two bullets in the private subnets. Is that helpful, or would you rather rewrite those bullets to parallel what the diagram shows?
