@@ -30,10 +30,10 @@ image::../images/image1.png[postdeploy1]
 .Both nodes showing online
 image::../images/image2.png[postdeploy2]
 +
-. Select the failover cluster, and verify that both the cluster and the file share witness are online.
+. Select the failover cluster, and verify that both the cluster and the file-share witness are online.
 +
 [#postdeploy3]
-.Cluster overview showing that both the cluster and the file share witness are online
+.Cluster overview showing that both the cluster and the file-share witness are online
 image::../images/image3.png[postdeploy3]
 +
 . Download https://docs.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-ver15[SQL Server Management Studio (SSMS)^].
