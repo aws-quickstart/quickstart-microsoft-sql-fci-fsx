@@ -14,14 +14,10 @@ As shown in <<architecture1>>, the Quick Start sets up the following:
 ** Managed network address translation (NAT) gateways to allow outbound internet access for resources in the private subnets.*
 ** A Remote Desktop Gateway (RD Gateway) host in an Auto Scaling group to allow inbound Remote Desktop Protocol (RDP) access to EC2 instances in public and private subnets.*
 * In the private subnets:
-** Two EC2 instances running Microsoft Windows with SQL Server installed in an FCI configuration.
-** An AWS managed directory.*
-** Two Amazon FSx file shares, one for user database storage and the other to act as the failover cluster witness.
+** Two EC2 instances running Microsoft Windows with SQL Server installed in an FCI configuration. 
+* Amazon FSx with two file shares: one for user database storage and the other to act as the failover cluster witness.*
+* AWS Directory Service with a managed directory.
 * AWS Secrets Manager keys to store credentials.
 * An AWS Systems Manager automation document to automate the deployment.
 
 [.small]#*The template that deploys the Quick Start into an existing VPC skips the components marked by asterisks and prompts you for your existing VPC configuration.#
-
-//TODO Dave, Please fill in the two blanks above.
-
-//TODO Dave, I added "(not shown)" to two bullets in the private subnets. Is that helpful, or would you rather rewrite those bullets to parallel what the diagram shows?
