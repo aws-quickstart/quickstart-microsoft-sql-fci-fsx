@@ -420,7 +420,7 @@ Resources:
         - AMIInfoFunctionLambdaExecutionRole
         - Arn
       Runtime: nodejs12.x
-      Timeout: '30'
+      Timeout: 30
   AMIInfoFunctionLambdaExecutionRole:
     Type: AWS::IAM::Role
     Properties:
@@ -1144,8 +1144,8 @@ Resources:
       InstanceType:
         Ref: WorkloadInstanceType
       NetworkInterfaces:
-      - DeleteOnTermination: 'true'
-        DeviceIndex: 0
+      - DeleteOnTermination: true
+        DeviceIndex: '0'
         SubnetId:
           Ref: PrivateSubnet1ID
         SecondaryPrivateIpAddressCount: 2
@@ -1164,7 +1164,7 @@ Resources:
       BlockDeviceMappings:
       - DeviceName: "/dev/sda1"
         Ebs:
-          VolumeSize: '100'
+          VolumeSize: 100
           VolumeType: gp2
       KeyName:
         Ref: KeyPairName
@@ -1208,8 +1208,8 @@ Resources:
       InstanceType:
         Ref: WorkloadInstanceType
       NetworkInterfaces:
-      - DeleteOnTermination: 'true'
-        DeviceIndex: 0
+      - DeleteOnTermination: true
+        DeviceIndex: '0'
         SubnetId:
           Ref: PrivateSubnet2ID
         SecondaryPrivateIpAddressCount: 2           
@@ -1228,7 +1228,7 @@ Resources:
       BlockDeviceMappings:
       - DeviceName: "/dev/sda1"
         Ebs:
-          VolumeSize: '100'
+          VolumeSize: 100
           VolumeType: gp2
       KeyName:
         Ref: KeyPairName
@@ -1321,8 +1321,8 @@ Resources:
        Ref: VPCID
      SecurityGroupIngress:
      - IpProtocol: '-1'
-       FromPort: '-1'
-       ToPort: '-1'
+       FromPort: -1
+       ToPort: -1
        CidrIp: 
          Ref: VPCcidr
   FSxWindowsFileSystem:
