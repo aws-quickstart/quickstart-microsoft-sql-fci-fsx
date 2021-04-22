@@ -1,4 +1,4 @@
-## SQL Server with Failover Cluster Instances and Amazon FSx on AWS—Quick Start
+## SQL Server Failover Cluster Instance on AWS—Quick Start
 
 For architectural details, step-by-step instructions, and customization options, see the [deployment guide](https://fwd.aws/5XG6A).
 
