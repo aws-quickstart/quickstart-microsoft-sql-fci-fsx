@@ -185,7 +185,7 @@ Parameters:
     MinLength: '1'
     Type: String       
   DomainAdminPassword:
-    Description: Password for the domain admin user.
+    Description: Password for the domain administator user.
     MaxLength: '32'
     MinLength: '0'
     NoEcho: 'true'
@@ -193,8 +193,8 @@ Parameters:
   DomainAdminUser:
     AllowedPattern: "[a-zA-Z0-9]*"
     Default: StackAdmin
-    Description: User name for the account that will be used as Domain Administrator.
-      This is separate from the default "Administrator" account
+    Description: User name for the account that will be used as domain administrator.
+      This is separate from the default "Administrator" account.
     MaxLength: '25'
     MinLength: '5'
     Type: String
@@ -270,7 +270,7 @@ Parameters:
     Type: String 
   SQLAdminAccounts:
     Default: "contoso\\Administrator"
-    Description: Comma-separated user names will be used as MSSQL DB Administrator. It could be AD domain admin, other local or domain users.
+    Description: Comma-separated user names will be used as MSSQL DB administrators. It could be AD domain administrators or other local or domain users.
     MaxLength: '25'
     MinLength: '5'
     Type: String    
@@ -1367,3 +1367,6 @@ Outputs:
   InstanceIP:
     Description: "Private IP of SqlFSx Instance"
     Value: !GetAtt SqlFSxInstance1.PrivateIp
+  Postdeployment:
+    Value: https://fwd.aws/5XG6A
+    Description: See the deployment guide for post-deployment steps.

@@ -50,7 +50,7 @@ Metadata:
           - WindowsVersion
           - WorkloadInstanceType
       - Label:
-          default: Amazon FSx Windows File Share Configuration
+          default: Amazon FSx Windows file-share configuration
         Parameters:
           - FileShareVolumeSize
           - FileShareThroughputCapacity
@@ -63,14 +63,14 @@ Metadata:
           - SqlFSxFCIName
           - SQLAdminAccounts
       - Label:
-          default: AWS Quick Start Configuration
+          default: AWS Quick Start configuration
         Parameters:
           - QSS3BucketName
           - QSS3BucketRegion
           - QSS3KeyPrefix
     ParameterLabels:
       ADScenarioType:
-        default: AD scenario type
+        default: Active Directory scenario type
       ADServer1InstanceType:
         default: Domain controller 1 instance type
       ADServer1NetBIOSName:
@@ -94,9 +94,9 @@ Metadata:
       DomainNetBIOSName:
         default: Domain NetBIOS name
       FileShareThroughputCapacity:
-        default: File share throughput capacity (MB/s)
+        default: File-share throughput capacity
       FileShareVolumeSize:
-        default: File share volume size
+        default: File-share volume size
       KeyPairName:
         default: EC2 key pair name
       MSSQLMediaBucketName:
@@ -104,7 +104,7 @@ Metadata:
       MSSQLMediaPathKey:
         default: S3 key for SQL media path
       NumberOfRDGWHosts:
-        default: Number of RDGW hosts
+        default: Number of RD Gateway hosts
       PrivateSubnet1CIDR:
         default: Private subnet 1 CIDR
       PrivateSubnet2CIDR:
@@ -114,17 +114,17 @@ Metadata:
       PublicSubnet2CIDR:
         default: Public subnet 2 CIDR
       QSS3BucketName:
-        default: Quick Start S3 Bucket Name
+        default: Quick Start S3 bucket name
       QSS3BucketRegion:
-        default: Quick Start S3 bucket region
+        default: Quick Start S3 bucket Region
       QSS3KeyPrefix:
-        default: Quick Start S3 Key Prefix
+        default: Quick Start S3 key prefix
       RDGWInstanceType:
-        default: RDGW instance type
+        default: RD Gateway instance type
       RDGWCIDR:
-        default: Allowed RDGW external access CIDR
+        default: Allowed RD Gateway external access CIDR
       SQLAdminAccounts:
-        default: SQL administrator account(s)
+        default: SQL administrator account or accounts
       SqlFSxFCIName:
         default: FCI name
       SqlFSxServerNetBIOSName1:
@@ -138,15 +138,14 @@ Metadata:
       WindowsVersion:
         default: Windows version
       WorkloadInstanceType:
-        default: Workload Servers EC2 instance type
+        default: Workload servers EC2 instance type
 Parameters:
   ADScenarioType:
     AllowedValues:
       - AWS Directory Service for Microsoft AD (Enterprise Edition)
       - Microsoft AD on Amazon EC2
     Default: AWS Directory Service for Microsoft AD (Enterprise Edition)
-    Description: 'Select the type of AD DS deployment to use: AWS Directory Service
-      for Microsoft AD or managing your own Amazon EC2 AD instances.'
+    Description: 'The type of AD DS deployment to use. If you want to manage your own Amazon EC2 AD instances, choose "Microsoft AD on Amazon EC2."'
     Type: String
   ADServer1InstanceType:
     AllowedValues:
@@ -204,13 +203,12 @@ Parameters:
     Type: String
   AvailabilityZones:
     Description: >-
-      List of Availability Zones to use for the subnets in the VPC. Note: The logical
-      order is preserved and 2 zones must be provided unless the Third Availability Zone parameter
-      is specified, in which case 3 zones must be provided.
+      Availability Zones to use for the subnets in the VPC. The logical order is preserved. Provide 2 unless the third Availability Zone parameter is specified, in which case provide 3.
+    # TODO: Dave, Can this Quick Start have three Availability Zones?
     Type: List<AWS::EC2::AvailabilityZone::Name>
   DomainAdminPassword:
     AllowedPattern: (?=^.{6,255}$)((?=.*\d)(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[^A-Za-z0-9])(?=.*[a-z])|(?=.*[^A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[A-Z])(?=.*[^A-Za-z0-9]))^.*
-    Description: Password for the domain admin user. Must be at least 8 characters
+    Description: Password for the domain administrative user. Must be at least 8 characters
       containing letters, numbers, and symbols.
     MaxLength: '32'
     MinLength: '8'
@@ -221,10 +219,7 @@ Parameters:
     Default: Admin
     Description: >-
       User name for the account that will be added as domain administrator. This is
-      separate from the default administrator account. Note: This user is used for Self-Managed
-      AD Scenario, when using AWS Directory Service for Microsoft AD "Admin" is the default
-      regardless of the value provided. 
-      provided.
+      separate from the default administrator account. You can specify this user name only for the self-managed AD scenario. If you're using the AWS Directory Service for Microsoft AD, the default stays "Admin" regardless of any value provided.
     MaxLength: '25'
     MinLength: '5'
     Type: String
@@ -245,7 +240,7 @@ Parameters:
     Type: String
   FileShareThroughputCapacity:
     Default: '8'
-    Description: File share throughput capacity, in 2 to the n'th power increments, where 3 <= n <= 11, i.e. (between 2^3 and 2^11).
+    Description: File share throughput capacity (MB/s) in 2 to the nth power increments, where 3 ≤ n ≤ 11, i.e. between 2^3 and 2^11.
     Type: Number
     AllowedValues: 
       - 8
@@ -259,7 +254,7 @@ Parameters:
       - 2048
   FileShareVolumeSize:
     Default: '32'
-    Description: Capacity of the volume used to store SQL Server files. Minimum value is 32 and maximum 65536. (GB)
+    Description: Capacity (GB) of the volume used to store SQL Server files. Minimum value is 32 and maximum 65536.
     Type: Number
     MinValue: 32
     MaxValue: 65536
@@ -269,17 +264,12 @@ Parameters:
     Type: AWS::EC2::KeyPair::KeyName
   MSSQLMediaBucketName:
     AllowedPattern: "^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$"
-    ConstraintDescription: The S3 bucket name wherefrom MSSQL media can be downloaded, lowercase
-      letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen
-      (-).
-    Description: The S3 bucket name wherefrom MSSQL media can be downloaded. This string can include
-      numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start
-      or end with a hyphen (-).
+    ConstraintDescription: You can use lowercase letters, uppercase letters, and hyphens (-). Do not start or end with a hyphen (-).
+    Description: Name of the S3 bucket from which MSSQL media can be downloaded. You can use lowercase letters, uppercase letters, and hyphens (-). Do not start or end with a hyphen (-).
     Type: String
   MSSQLMediaPathKey:
     Default: SQLServer2019-x64-ENU.iso
-    Description: The S3 bucket key wherefrom MSSQL media can be downloaded. This string can include numbers, lowercase letters, uppercase letters, hyphens (-), and
-      forward slash (/).
+    Description: Key for the S3 bucket from which MSSQL media can be downloaded. You can use numbers, lowercase letters, uppercase letters, hyphens (-), and forward slashes (/).
     Type: String
   NumberOfRDGWHosts:
     AllowedValues:
@@ -303,36 +293,43 @@ Parameters:
     Type: String
   PublicSubnet1CIDR:
     Default: 10.0.128.0/20
-    Description: CIDR block for the public subnet 2 located in Availability Zone
-      2.
+    Description: CIDR block for public subnet 1 located in Availability Zone 1.
     Type: String
   PublicSubnet2CIDR:
     Default: 10.0.144.0/20
-    Description: CIDR block for the optional public subnet 3 located in Availability
-      Zone 3.
+    Description: CIDR block for public subnet 2 located in Availability Zone 2.
     Type: String
   QSS3BucketName:
     AllowedPattern: "^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$"
-    ConstraintDescription: Quick Start bucket name can include numbers, lowercase
-      letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen
-      (-).
+    ConstraintDescription: The Quick Start bucket name can include numbers, lowercase
+      letters, uppercase letters, and hyphens (-). It cannot start or end with a 
+      hyphen (-).
     Default: aws-quickstart
-    Description: S3 bucket name for the Quick Start assets. This string can include
-      numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start
-      or end with a hyphen (-).
+    Description: Name of the S3 bucket for your copy of the Quick Start assets. 
+      Keep the default name unless you are customizing the template. 
+      Changing the name updates code references to point to a new Quick 
+      Start location. This name can include numbers, lowercase letters, 
+      uppercase letters, and hyphens, but do not start or end with a hyphen (-). 
+      See https://aws-quickstart.github.io/option1.html.
     Type: String
   QSS3BucketRegion:
     Default: us-east-1
-    Description: The AWS Region where the Quick Start S3 bucket (QSS3BucketName) is hosted. When using your own bucket, you must specify this value.
+    Description: AWS Region where the Quick Start S3 bucket (QSS3BucketName) is 
+    hosted. Keep the default Region unless you are customizing the template. Changing this Region updates code references to point to a new Quick Start location. When using your own bucket, specify the Region. See https://aws-quickstart.github.io/option1.html.
     Type: String
   QSS3KeyPrefix:
     AllowedPattern: "^[0-9a-zA-Z-/]*$"
-    ConstraintDescription: Quick Start key prefix can include numbers, lowercase letters,
-      uppercase letters, hyphens (-), and forward slash (/).
+    ConstraintDescription: The Quick Start S3 key prefix can include numbers, lowercase letters,
+      uppercase letters, hyphens (-), and forward slashes (/). The prefix should
+      end with a forward slash (/).
     Default: quickstart-microsoft-sql-fci-fsx/
-    Description: S3 key prefix for the Quick Start assets. Quick Start key prefix
-      can include numbers, lowercase letters, uppercase letters, hyphens (-), and
-      forward slash (/).
+    Description: S3 key prefix that is used to simulate a directory for your copy of the 
+      Quick Start assets. Keep the default prefix unless you are customizing 
+      the template. Changing this prefix updates code references to point to 
+      a new Quick Start location. This prefix can include numbers, lowercase 
+      letters, uppercase letters, hyphens (-), and forward slashes (/). End with 
+      a forward slash. See https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingMetadata.html 
+      and https://aws-quickstart.github.io/option1.html.
     Type: String
   RDGWInstanceType:
     AllowedValues:
@@ -353,35 +350,37 @@ Parameters:
     Type: String
   SQLAdminAccounts:
     Default: "example\\Admin"
-    Description: Comma-separated user names will be used as MSSQL DB Administrator. It could be AD domain admin, other local or domain users.
+    Description: Comma-separated user names will be used as MSSQL DB administrators. It could be AD domain administrators or other local or domain users.
     MaxLength: '25'
     MinLength: '5'
     Type: String
   SqlFSxFCIName:
     AllowedPattern: "[a-zA-Z0-9\\-]+"
     Default: SqlFCI
-    Description: FCI name
+    Description: Name of the failover cluster instance.
+    # TODO: Dave, In this description, what guidance might people appreciate?
     MaxLength: '15'
     MinLength: '1'
     Type: String
   SqlFSxServerNetBIOSName1:
     AllowedPattern: "[a-zA-Z0-9\\-]+"
     Default: SqlFSx1
-    Description: NetBIOS name of the SQL server (up to 15 characters)
+    Description: NetBIOS name of the primary SQL server (up to 15 characters).
     MaxLength: '15'
     MinLength: '1'
     Type: String
   SqlFSxServerNetBIOSName2:
     AllowedPattern: "[a-zA-Z0-9\\-]+"
     Default: SqlFSx2
-    Description: NetBIOS name of the SQL server (up to 15 characters)
+    Description: NetBIOS name of the secondary SQL server (up to 15 characters).
     MaxLength: '15'
     MinLength: '1'
     Type: String
   SqlFSxWSFCName:
     AllowedPattern: "[a-zA-Z0-9\\-]+"
     Default: WSFC1
-    Description: Windows Server failover cluster name
+    Description: Name of the Windows Server failover cluster.
+    # TODO: Dave, In this description, what guidance might people appreciate?
     MaxLength: '15'
     MinLength: '1'
     Type: String
@@ -397,7 +396,7 @@ Parameters:
     - Windows_Server-2016-English-Full-Base*
     ConstraintDescription: Must be one of supported Windows versions
     Default: Windows_Server-2019-English-Full-Base*
-    Description: Select Windows version to run SQL Server.
+    Description: Choose the Windows version to run SQL Server.
     Type: String
   WorkloadInstanceType:
     AllowedValues:
@@ -420,7 +419,7 @@ Parameters:
     - z1d.xlarge
     ConstraintDescription: Must contain valid instance type
     Default: r5.2xlarge
-    Description: Type of EC2 instance for the Workload instances
+    Description: Type of EC2 instance for the workload instances.
     Type: String
 Conditions:
   UsingDefaultBucket: !Equals [!Ref QSS3BucketName, 'aws-quickstart']

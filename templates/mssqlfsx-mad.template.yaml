@@ -182,7 +182,7 @@ Parameters:
     MinLength: '1'
     Type: String       
   DomainAdminPassword:
-    Description: Password for the domain admin user.
+    Description: Password for the domain administrator user.
     MaxLength: '32'
     MinLength: '0'
     NoEcho: 'true'
@@ -272,7 +272,7 @@ Parameters:
     Type: String 
   SQLAdminAccounts:
     Default: "contoso\\Administrator"
-    Description: Comma-separated user names will be used as MSSQL DB Administrator. It could be AD domain admin, other local or domain users.
+    Description: Comma-separated user names will be used as MSSQL DB administrators. It could be AD domain administrators or other local or domain users.
     MaxLength: '25'
     MinLength: '5'
     Type: String
@@ -307,7 +307,7 @@ Resources:
     Type: AWS::SecretsManager::Secret
     Properties:
       Name: !Sub 'AWSQuickStart/${AWS::StackName}/ADAdminSecrets'
-      Description: Active Directory administrator Credentials for Quick Start
+      Description: Active Directory administrator credentials for Quick Start
       SecretString: !Sub '{ "username" : "${DomainAdminUser}", "password" : "${DomainAdminPassword}" }'
   QuickStartLogs:
     Type: AWS::Logs::LogGroup
@@ -1369,3 +1369,6 @@ Outputs:
   InstanceIP:
     Description: "Private IP of SqlFSx Instance"
     Value: !GetAtt SqlFSxInstance1.PrivateIp
+  Postdeployment:
+    Value: https://fwd.aws/5XG6A
+    Description: See the deployment guide for post-deployment steps.
