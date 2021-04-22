@@ -43,5 +43,3 @@ For more information, see https://docs.aws.amazon.com/AWSCloudFormation/latest/U
 * https://aws.amazon.com/quickstart/[AWS Quick Start home page^]
 * https://aws.amazon.com/quickstart/architecture/active-directory-ds/[Active Directory Domain Services on AWS^]
 * https://aws.amazon.com/quickstart/architecture/rd-gateway/[Remote Desktop Gateway on AWS^]
-
-//TODO Dave, Do you want Amazon EBS in this list?
