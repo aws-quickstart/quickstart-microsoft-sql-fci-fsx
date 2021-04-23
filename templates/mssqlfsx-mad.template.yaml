@@ -94,7 +94,7 @@ Metadata:
         default: SQL administrator account or accounts
       ADDnsIpAddresses: 
         default: Active Directory DNS IP addresses
-        #TODO Dave, I added some items above because these parameters were coming into the table saying NO_LABEL. Do these additions work?     
+        #TODO: Dave, I added some items above because these parameters were coming into the table saying NO_LABEL. Do these additions work?     
       DirectoryId: 
         default: ID of the AWS Directory Service directory     
       SqlFSxServerNetBIOSName1:
@@ -538,8 +538,8 @@ Resources:
             type: "String"
           DomainNetBIOSName: 
             default: !Sub "${DomainNetBIOSName}"
-            description: NetBIOS name of the domain for users of earlier
-            versions of Windows. You can use up to 15 characters, e.g. "EXAMPLE."
+            description: 'NetBIOS name of the domain for users of earlier
+            versions of Windows. You can use up to 15 characters, e.g. "EXAMPLE."'
             type: "String"
           DirectoryId:
             default: !Sub "${DirectoryId}"
