@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: '2010-09-09'
-Description: This workload template deploys a SQL FSx instance in a new VPC. **WARNING**
+Description: This workload template deploys a SQL FSx instance in a new VPC. **IMPORTANT**
   This template creates EC2 instances and related resources. You will be billed for
   the AWS resources used if you create a stack from this template. (qs-1rih7cd6r)
 Metadata:
@@ -86,9 +86,9 @@ Metadata:
       AvailabilityZones:
         default: Availability Zones
       DomainAdminPassword:
-        default: Domain admin password
+        default: Domain administrator password
       DomainAdminUser:
-        default: Domain admin user name
+        default: Domain administrator user name
       DomainDNSName:
         default: Domain DNS name
       DomainNetBIOSName:
@@ -126,13 +126,13 @@ Metadata:
       SQLAdminAccounts:
         default: SQL administrator account or accounts
       SqlFSxFCIName:
-        default: FCI name
+        default: Failover cluster instance (FCI) name
       SqlFSxServerNetBIOSName1:
-        default: Server1 NetBIOS Name
+        default: Server1 NetBIOS name
       SqlFSxServerNetBIOSName2:
-        default: Server2 NetBIOS Name
+        default: Server2 NetBIOS name
       SqlFSxWSFCName:
-        default: Windows Server failover cluster name
+        default: Windows Server Failover Cluster (WSFC) name
       VPCCIDR:
         default: VPC CIDR block
       WindowsVersion:
@@ -145,7 +145,7 @@ Parameters:
       - AWS Directory Service for Microsoft AD (Enterprise Edition)
       - Microsoft AD on Amazon EC2
     Default: AWS Directory Service for Microsoft AD (Enterprise Edition)
-    Description: 'The type of AD DS deployment to use. If you want to manage your own Amazon EC2 AD instances, choose "Microsoft AD on Amazon EC2."'
+    Description: 'Type of AD DS deployment to use. If you want to manage your own Amazon EC2 Active Directory instances, choose "Microsoft AD on Amazon EC2."'
     Type: String
   ADServer1InstanceType:
     AllowedValues:
@@ -159,19 +159,19 @@ Parameters:
       - m5.2xlarge
       - m5.4xlarge
     Default: m5.xlarge
-    Description: Amazon EC2 instance type for the first Active Directory instance.
+    Description: Amazon EC2 instance type for the first Active Directory instance, located in Availability Zone 1.
     Type: String
   ADServer1NetBIOSName:
     AllowedPattern: '[a-zA-Z0-9\-]+'
     Default: DC1
-    Description: NetBIOS name of the first Active Directory server (up to 15 characters).
+    Description: NetBIOS name of the first Active Directory instance, located in Availability Zone 1. This name can have  up to 15 characters.
     MaxLength: '15'
     MinLength: '1'
     Type: String
   ADServer1PrivateIP:
     AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$
     Default: 10.0.0.10
-    Description: Fixed private IP for the first Active Directory server located in
+    Description: Fixed private IP address for the first Active Directory instance, located in
       Availability Zone 1.
     Type: String
   ADServer2InstanceType:
@@ -186,19 +186,19 @@ Parameters:
       - m5.2xlarge
       - m5.4xlarge
     Default: m5.xlarge
-    Description: Amazon EC2 instance type for the second Active Directory instance.
+    Description: Amazon EC2 instance type for the second Active Directory instance, located in Availability Zone 2.
     Type: String
   ADServer2NetBIOSName:
     AllowedPattern: '[a-zA-Z0-9\-]+'
     Default: DC2
-    Description: NetBIOS name of the second Active Directory server (up to 15 characters).
+    Description: NetBIOS name of the second Active Directory instance, located in Availability Zone 2. This name can have up to 15 characters.
     MaxLength: '15'
     MinLength: '1'
     Type: String
   ADServer2PrivateIP:
     AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$
     Default: 10.0.32.10
-    Description: Fixed private IP for the second Active Directory server located in
+    Description: Fixed private IP address for the second Active Directory instance, located in
       Availability Zone 2.
     Type: String
   AvailabilityZones:
@@ -208,7 +208,7 @@ Parameters:
     Type: List<AWS::EC2::AvailabilityZone::Name>
   DomainAdminPassword:
     AllowedPattern: (?=^.{6,255}$)((?=.*\d)(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[^A-Za-z0-9])(?=.*[a-z])|(?=.*[^A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[A-Z])(?=.*[^A-Za-z0-9]))^.*
-    Description: Password for the domain administrative user. Must be at least 8 characters
+    Description: Password for the domain administrator. Must be at least 8 characters
       containing letters, numbers, and symbols.
     MaxLength: '32'
     MinLength: '8'
@@ -218,8 +218,7 @@ Parameters:
     AllowedPattern: '[a-zA-Z0-9]*'
     Default: Admin
     Description: >-
-      User name for the account that will be added as domain administrator. This is
-      separate from the default administrator account. You can specify this user name only for the self-managed AD scenario. If you're using the AWS Directory Service for Microsoft AD, the default stays "Admin" regardless of any value provided.
+      User name for the account that will be added as domain administrator. This is separate from the default "Administrator" account. You can specify this user name only for the self-managed Active Directory scenario. If you're using the AWS Directory Service for Microsoft AD, the default stays "Admin" regardless of any value provided.
     MaxLength: '25'
     MinLength: '5'
     Type: String
@@ -233,14 +232,14 @@ Parameters:
   DomainNetBIOSName:
     AllowedPattern: '[a-zA-Z0-9\-]+'
     Default: example
-    Description: NetBIOS name of the domain (up to 15 characters) for users of earlier
-      versions of Windows.
+    Description: NetBIOS name of the domain for users of earlier
+      versions of Windows. You can use up to 15 characters, e.g. "example."
     MaxLength: '15'
     MinLength: '1'
     Type: String
   FileShareThroughputCapacity:
     Default: 8
-    Description: File share throughput capacity (MB/s) in 2 to the nth power increments, where 3 ≤ n ≤ 11, i.e. between 2^3 and 2^11.
+    Description: File-share throughput capacity (MB/s) in 2 to the nth power increments, where 3 ≤ n ≤ 11, i.e. between 2^3 and 2^11.
     Type: Number
     AllowedValues: 
       - 8
@@ -279,7 +278,7 @@ Parameters:
       - '3'
       - '4'
     Default: '1'
-    Description: Enter the number of Remote Desktop Gateway hosts to create.
+    Description: Number of Remote Desktop Gateway hosts to create.
     Type: String
   PrivateSubnet1CIDR:
     AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$
@@ -348,48 +347,48 @@ Parameters:
     Type: String
   RDGWCIDR:
     AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$
-    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/x
+    ConstraintDescription: The CIDR block parameter must be in the form x.x.x.x/x.
     Description: Allowed CIDR block for external access to the Remote Desktop Gateway instances.
     Type: String
   SQLAdminAccounts:
     Default: "example\\Admin"
-    Description: Comma-separated user names will be used as MSSQL DB administrators. It could be AD domain administrators or other local or domain users.
+    Description: Comma-separated user names are used as MSSQL DB administrators. It could be Active Directory domain administrators or other local or domain users.
     MaxLength: '25'
     MinLength: '5'
     Type: String
   SqlFSxFCIName:
     AllowedPattern: "[a-zA-Z0-9\\-]+"
     Default: SqlFCI
-    Description: Name of the failover cluster instance.
-    # TODO: Dave, In this description, what guidance might people appreciate?
+    Description: Name of the failover cluster instance (FCI).
+    # TODO: Dave, In this description, what guidance might people appreciate (constraints, naming guidelines)?
     MaxLength: '15'
     MinLength: '1'
     Type: String
   SqlFSxServerNetBIOSName1:
     AllowedPattern: "[a-zA-Z0-9\\-]+"
     Default: SqlFSx1
-    Description: NetBIOS name of the primary SQL server (up to 15 characters).
+    Description: NetBIOS name of the primary instance (up to 15 characters).
     MaxLength: '15'
     MinLength: '1'
     Type: String
   SqlFSxServerNetBIOSName2:
     AllowedPattern: "[a-zA-Z0-9\\-]+"
     Default: SqlFSx2
-    Description: NetBIOS name of the secondary SQL server (up to 15 characters).
+    Description: NetBIOS name of the secondary instance (up to 15 characters).
     MaxLength: '15'
     MinLength: '1'
     Type: String
   SqlFSxWSFCName:
     AllowedPattern: "[a-zA-Z0-9\\-]+"
     Default: WSFC1
-    Description: Name of the Windows Server failover cluster.
-    # TODO: Dave, In this description, what guidance might people appreciate?
+    Description: Name of the Windows Server Failover Cluster (WSFC).
+    # TODO: Dave, In this description, what guidance might people appreciate (constraints, naming guidelines)?
     MaxLength: '15'
     MinLength: '1'
     Type: String
   VPCCIDR:
     AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
-    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+    ConstraintDescription: The CIDR block parameter must be in the form x.x.x.x/16-28.
     Default: 10.0.0.0/16
     Description: CIDR block for the VPC.
     Type: String
@@ -397,7 +396,7 @@ Parameters:
     AllowedValues:
     - Windows_Server-2019-English-Full-Base*
     - Windows_Server-2016-English-Full-Base*
-    ConstraintDescription: Must be one of supported Windows versions
+    ConstraintDescription: Must be one of the supported Windows versions.
     Default: Windows_Server-2019-English-Full-Base*
     Description: Choose the Windows version to run SQL Server.
     Type: String
@@ -420,7 +419,7 @@ Parameters:
     - r4.8xlarge
     - z1d.large
     - z1d.xlarge
-    ConstraintDescription: Must contain valid instance type
+    ConstraintDescription: Must contain a valid instance type.
     Default: r5.2xlarge
     Description: Type of EC2 instance for the workload instances.
     Type: String

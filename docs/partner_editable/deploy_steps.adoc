@@ -35,7 +35,7 @@ Each deployment takes about {deployment_time} to complete.
 ^|https://fwd.aws/6JaVw[Deploy into an existing VPC with AWS Managed Microsoft AD^]
 ^|https://fwd.aws/Qpevx[View template^]
 
-^|https://fwd.aws/x5n57[Deploy into an existing VPC with self-managed AD^]
+^|https://fwd.aws/x5n57[Deploy into an existing VPC with self-managed Active Directory^]
 ^|https://fwd.aws/KrvQD[View template^]
 |===
 +

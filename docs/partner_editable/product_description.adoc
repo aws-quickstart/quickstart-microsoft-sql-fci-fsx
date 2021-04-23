@@ -1,12 +1,14 @@
+:xrefstyle: short
+
 The {partner-product-short-name} Quick Start deploys a highly available environment that includes Windows Server and SQL Server running on Amazon Elastic Compute Cloud (EC2). It requires shared storage that is accessible by all nodes within the WSFC cluster. It supports SQL Server 2019 running on Windows Server 2019.
 
-This architecture uses a highly-available Multi-AZ Amazon FSx file system as the network share used to store MSSQL database files. The FSx file system and EC2 Windows instances that host this architecture's nodes are joined to the same Active Directory (AD) domain.
+This architecture uses a highly available Multi-AZ Amazon FSx file system as the network share used to store MSSQL database files. The Amazon FSx file system and EC2 Windows instances that host this architecture's nodes are joined to the same Active Directory domain.
 
-NOTE: "Instance" has different meanings depending on the context. A SQL Server Always On failover cluster instance is a single instance of SQL Server that is installed across multiple WSFC nodes (EC2 instances).
+NOTE: The "instance" in "failover cluster instance" means something different from the "instance" in "EC2 instance." In this Quick Start, a failover cluster instance, or FCI, has the appearance of an instance of SQL Server running on a single computer. A failover cluster instance provides failover from one EC2 instance (WSFC node) to another if the current EC2 instance goes down. For an illustration, see <<architecture1>>.
 
 Traditionally, FCIs have been difficult to deploy and manage. With its Multi-AZ file system option, Amazon FSx provides fully managed file storage. This storage enables the high availability and durability that's required to run business-critical Microsoft SQL Server database workloads without requiring licenses for each server. Amazon FSx automatically handles failover, simplifying shared storage to host your database deployments while reducing cost.
 
-The automation in this deployment uses AWS Systems Manager Automation, AWS CloudFormation, and Windows PowerShell Desired State Configuration (DSC) to deploy a multi-node SQL Always On FCI. Windows Server Failover Clustering is a prerequisite for deploying an Always On FCI. MSSQL uses WSFC to increase application availability. WSFC provides infrastructure features that complement the high-availability and disaster-recovery scenarios supported in the AWS Cloud.
+The automation in this deployment uses AWS Systems Manager Automation, AWS CloudFormation, and   Windows PowerShell Desired State Configuration (DSC) to deploy a multi-node SQL Always On FCI. Windows Server Failover Clustering is a prerequisite for deploying an Always On FCI. MSSQL uses WSFC to increase application availability. WSFC provides infrastructure features that complement the high-availability and disaster-recovery scenarios supported in the AWS Cloud.
 
 FCI, which was introduced with SQL Server 2008 as a high-availability feature, continues to be available in all newer versions of MSSQL. When used on premises, SQL Server FCI is often used purely for high availability within a single data center. On AWS, you can use the {partner-product-short-name} Quick Start to cover both high-availability and disaster-recovery requirements.
 

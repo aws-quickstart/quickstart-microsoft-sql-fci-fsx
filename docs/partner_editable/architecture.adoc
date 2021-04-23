@@ -15,15 +15,17 @@ As shown in <<architecture1>>, this Quick Start sets up the following:
 ** A Remote Desktop Gateway (RD Gateway) host in an Auto Scaling group to allow inbound Remote Desktop Protocol (RDP) access to EC2 instances in public and private subnets.*
 * In the private subnets:
 ** Two EC2 instances running Microsoft Windows with SQL Server. These instances are installed as nodes in a WSFC cluster in an Always On FCI configuration across the Availability Zones. Each node contains an Amazon Elastic Block Store (Amazon EBS) root volume.
-** In Availability Zone 1, an FSx file system that acts as a file-share (failover cluster) witness.
-* The main FSx file system, which the FCI nodes share. SQL Server is installed in this file system. This file system also stores all SQL database-related files: the database files themselves, the database log files, and `tempdb` files.*
-* AWS Directory Service with a managed directory. The main FSx file system and the EC2 Windows instances that host this architecture's nodes are joined to the same AD domain.
+** In Availability Zone 1, an Amazon FSx file system that acts as a file-share (failover cluster) witness.
+* Another Amazon FSx file system, which the FCI nodes share. SQL Server is installed in this file system. This file system also stores all SQL database-related files: the database files themselves, the database log files, and `tempdb` files.*
+* AWS Directory Service with a managed directory. The Amazon FSx file system and the EC2 Windows instances that host this architecture's nodes are joined to the same Active Directory domain.
 * AWS Secrets Manager keys to store credentials.
 * An AWS Systems Manager automation document to automate the deployment.
 
 [.small]#*The template that deploys the Quick Start into an existing VPC skips the components marked by asterisks and prompts you for your existing VPC configuration.#
 
-=== Always On replication: A Comparison ===
+//TODO Dave, please verify the additions I've made to the list per our refined diagram. Also make sure that the asterisks are still correct. Thanks!
+
+=== Always On replication: A comparison ===
 
 To better understand the {partner-product-short-name} Quick Start, it's helpful to compare with the https://aws.amazon.com/quickstart/architecture/sql/[Quick Start for SQL Server with Always On Replication^]. Both Quick Starts are architected to ensure high availability. Both have EC2 instances clustered using WSFC. Both have database files stored in multiple Availability Zones. What's different is the way each Quick Start accomplishes database high availability.
 
@@ -37,7 +39,7 @@ With Always On replication, as shown in <<architecture2>>, two EC2 instances run
 
 Each EC2 instance is joined to a WSFC cluster. An https://docs.microsoft.com/en-us/sql/database-engine/availability-groups/windows/overview-of-always-on-availability-groups-sql-server[Always On availability group^] is configured across both servers. Databases installed in the availability group have their database and log files replicated across the cluster. If the primary server in the cluster becomes unavailable, the secondary server is promoted to become the primary, and traffic to the availability group is routed to it. 
 
-The SQL Server with Always On replication Quick Start, by default, does not use Amazon FSx. While it supports using an FSx file system as a file-share witness, by default it deploys an EC2 instance for this purpose.
+The SQL Server with Always On Replication Quick Start, by default, does not use Amazon FSx. While it supports using an Amazon FSx file system as a file-share witness, by default it deploys an EC2 instance for this purpose.
 
 === What makes the {partner-product-short-name} Quick Start unique ===
 
@@ -45,7 +47,7 @@ Like the Always On replication architecture, the {partner-product-short-name} Qu
 
 *What makes the FCI architecture unique is that it requires only one SQL Server license.* That's because it doesn't install SQL Server in the local file systems. Instead, it creates an Amazon FSx file system and installs SQL Server there. The FCI nodes share this file system.
 
-That shared FSx file system also stores all the SQL database-related files: the database files themselves, database log files, and `tempdb` files. Unlike an availability group, an FCI does not replicate database-related files across the cluster. 
+That shared Amazon FSx file system also stores all the SQL database-related files: the database files themselves, database log files, and `tempdb` files. Unlike an availability group, an FCI does not replicate database-related files across the cluster. 
 
 The {partner-product-short-name} architecture uses a separate Amazon FSx file system as a file-share witness.
 
@@ -64,4 +66,4 @@ The {partner-product-short-name} architecture uses a separate Amazon FSx file sy
 * Advantage: It requires only one SQL Server license.
 * Disadvantages:
 ** It relies on an Amazon FSx Multi-AZ file system, which is not supported in all AWS Regions.
-** It requires the customer to provide a SQL server .iso file and license since AWS-provided SQL licensing is not supported.
+** It requires the customer to provide a SQL Server .iso file and license since AWS-provided SQL licensing is not supported.
