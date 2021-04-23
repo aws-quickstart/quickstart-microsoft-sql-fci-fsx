@@ -203,8 +203,7 @@ Parameters:
     Type: String
   AvailabilityZones:
     Description: >-
-      Availability Zones to use for the subnets in the VPC. The logical order is preserved. Provide 2 unless the third Availability Zone parameter is specified, in which case provide 3.
-    # TODO: Dave, Can this Quick Start have three Availability Zones?
+      Availability Zones to use for the subnets in the VPC. Two Availability Zones are used and the logical order is preserved.
     Type: List<AWS::EC2::AvailabilityZone::Name>
   DomainAdminPassword:
     AllowedPattern: (?=^.{6,255}$)((?=.*\d)(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[^A-Za-z0-9])(?=.*[a-z])|(?=.*[^A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[A-Z])(?=.*[^A-Za-z0-9]))^.*
@@ -359,8 +358,7 @@ Parameters:
   SqlFSxFCIName:
     AllowedPattern: "[a-zA-Z0-9\\-]+"
     Default: SqlFCI
-    Description: Name of the failover cluster instance (FCI).
-    # TODO: Dave, In this description, what guidance might people appreciate (constraints, naming guidelines)?
+    Description: Name of the failover cluster instance (FCI) (up to 15 characters).
     MaxLength: '15'
     MinLength: '1'
     Type: String
@@ -381,8 +379,7 @@ Parameters:
   SqlFSxWSFCName:
     AllowedPattern: "[a-zA-Z0-9\\-]+"
     Default: WSFC1
-    Description: Name of the Windows Server Failover Cluster (WSFC).
-    # TODO: Dave, In this description, what guidance might people appreciate (constraints, naming guidelines)?
+    Description: Name of the Windows Server Failover Cluster (WSFC) (up to 15 characters).
     MaxLength: '15'
     MinLength: '1'
     Type: String

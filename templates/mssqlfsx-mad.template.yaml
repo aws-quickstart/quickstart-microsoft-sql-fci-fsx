@@ -93,8 +93,7 @@ Metadata:
       SQLAdminAccounts:
         default: SQL administrator account or accounts
       ADDnsIpAddresses: 
-        default: Active Directory DNS IP addresses
-        #TODO: Dave, I added some items above because these parameters were coming into the table saying NO_LABEL. Do these additions work?     
+        default: Active Directory DNS IP addresses  
       DirectoryId: 
         default: ID of the AWS Directory Service directory     
       SqlFSxServerNetBIOSName1:
@@ -191,16 +190,14 @@ Parameters:
   SqlFSxWSFCName:
     AllowedPattern: "[a-zA-Z0-9\\-]+"
     Default: WSFC1
-    Description: Name of the Windows Server Failover Cluster (WSFC).
-    # TODO: Dave, In this description, what guidance might people appreciate (constraints, naming guidelines)?
+    Description: Name of the Windows Server Failover Cluster (WSFC) (up to 15 characters).
     MaxLength: '15'
     MinLength: '1'
     Type: String   
   SqlFSxFCIName:
     AllowedPattern: "[a-zA-Z0-9\\-]+"
     Default: SqlFCI
-    Description: Name of the failover cluster instance (FCI).
-    # TODO: Dave, In this description, what guidance might people appreciate (constraints, naming guidelines)?
+    Description: Name of the failover cluster instance (FCI) (up to 15 characters).
     MaxLength: '15'
     MinLength: '1'
     Type: String       

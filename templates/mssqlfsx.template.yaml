@@ -91,7 +91,6 @@ Metadata:
         default: Failover cluster instance (FCI) name
       SQLAdminAccounts:
         default: SQL administrator account or accounts
-    #TODO: Dave, I added some items above because this parameters were coming into the table saying NO_LABEL. Are these okay here? 
       DomainNetBIOSName:
         default: Domain NetBIOS name     
       SqlFSxServerNetBIOSName1:
@@ -194,16 +193,14 @@ Parameters:
   SqlFSxWSFCName:
     AllowedPattern: "[a-zA-Z0-9\\-]+"
     Default: WSFC1
-    Description: Name of the Windows Server Failover Cluster (WSFC).
-    # TODO: Dave, In this description, what guidance might people appreciate (constraints, naming guidelines)?
+    Description: Name of the Windows Server Failover Cluster (WSFC) (up to 15 characters).
     MaxLength: '15'
     MinLength: '1'
     Type: String   
   SqlFSxFCIName:
     AllowedPattern: "[a-zA-Z0-9\\-]+"
     Default: SqlFCI
-    Description: Name of the failover cluster instance (FCI).
-    # TODO: Dave, In this description, what guidance might people appreciate (constraints, naming guidelines)?
+    Description: Name of the failover cluster instance (FCI) (up to 15 characters).
     MaxLength: '15'
     MinLength: '1'
     Type: String       
@@ -546,8 +543,7 @@ Resources:
             type: "String"   
           SqlFSxFCIName:
             default: !Sub "${SqlFSxFCIName}"
-            description: "NetBIOS name of the cluster (up to 15 characters)."
-            # TODO: Dave, should this description be different from the one just above it in line 545? ("ClusterName" doesn't appear in the parameter table in the doc, so I'm not editing these.)
+            description: "NetBIOS name of the Failover Cluster Instance (FCI) (up to 15 characters)."
             type: "String"  
           SQLAdminAccounts:            
             default: !Sub "${SQLAdminAccounts}"
