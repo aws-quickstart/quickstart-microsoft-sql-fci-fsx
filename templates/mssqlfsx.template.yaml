@@ -547,7 +547,7 @@ Resources:
           SqlFSxFCIName:
             default: !Sub "${SqlFSxFCIName}"
             description: "NetBIOS name of the cluster (up to 15 characters)."
-            # TODO: Dave, should this description be different from the one just above it in line 535? ("ClusterName" doesn't appear in the parameter table in the doc, so I'm not editing these.)
+            # TODO: Dave, should this description be different from the one just above it in line 545? ("ClusterName" doesn't appear in the parameter table in the doc, so I'm not editing these.)
             type: "String"  
           SQLAdminAccounts:            
             default: !Sub "${SQLAdminAccounts}"
