@@ -81,7 +81,17 @@ Metadata:
         default: Security group ID for Active Directory domain members
       ADDnsIpAddresses:
         default: Active Directory DNS IP addresses
-    #TODO Dave, I added this item above because this parameter was coming into the table saying NO_LABEL. Is this okay here? 
+      MSSQLMediaBucketName:
+        default: S3 bucket for SQL media
+      MSSQLMediaPathKey:
+        default: S3 key for SQL media path
+      SqlFSxWSFCName:
+        default: Windows Server Failover Cluster (WSFC) name
+      SqlFSxFCIName:
+        default: Failover cluster instance (FCI) name
+      SQLAdminAccounts:
+        default: SQL administrator account or accounts
+    #TODO: Dave, I added some items above because this parameters were coming into the table saying NO_LABEL. Are these okay here? 
       DomainNetBIOSName:
         default: Domain NetBIOS name     
       SqlFSxServerNetBIOSName1:
@@ -537,7 +547,7 @@ Resources:
           SqlFSxFCIName:
             default: !Sub "${SqlFSxFCIName}"
             description: "NetBIOS name of the cluster (up to 15 characters)."
-            # TODO Dave, should this description be different from the one just above it in line 535? ("ClusterName" doesn't appear in the parameter table in the doc, so I'm not editing these.)
+            # TODO: Dave, should this description be different from the one just above it in line 535? ("ClusterName" doesn't appear in the parameter table in the doc, so I'm not editing these.)
             type: "String"  
           SQLAdminAccounts:            
             default: !Sub "${SQLAdminAccounts}"
