@@ -176,28 +176,28 @@ Parameters:
   SqlFSxServerNetBIOSName1:
     AllowedPattern: "[a-zA-Z0-9\\-]+"
     Default: SqlFSx1
-    Description: NetBIOS name of the primary instance (up to 15 characters).
+    Description: NetBIOS name of the primary instance. You can use up to 15 characters.
     MaxLength: '15'
     MinLength: '1'
     Type: String
   SqlFSxServerNetBIOSName2:
     AllowedPattern: "[a-zA-Z0-9\\-]+"
     Default: SqlFSx2
-    Description: NetBIOS name of the secondary instance (up to 15 characters).
+    Description: NetBIOS name of the secondary instance. You can use up to 15 characters.
     MaxLength: '15'
     MinLength: '1'
     Type: String
   SqlFSxWSFCName:
     AllowedPattern: "[a-zA-Z0-9\\-]+"
     Default: WSFC1
-    Description: Name of the Windows Server Failover Cluster (WSFC) (up to 15 characters).
+    Description: Name of the Windows Server Failover Cluster (WSFC). You can use up to 15 characters.
     MaxLength: '15'
     MinLength: '1'
     Type: String   
   SqlFSxFCIName:
     AllowedPattern: "[a-zA-Z0-9\\-]+"
     Default: SqlFCI
-    Description: Name of the failover cluster instance (FCI) (up to 15 characters).
+    Description: Name of the failover cluster instance (FCI). You can use up to 15 characters.
     MaxLength: '15'
     MinLength: '1'
     Type: String       
@@ -218,7 +218,7 @@ Parameters:
   DomainDNSName:
     AllowedPattern: "[a-zA-Z0-9\\-]+\\..+"
     Default: example.com
-    Description: Fully qualified domain name (FQDN), e.g. "example.com."
+    Description: Fully qualified domain name (FQDN).
     MaxLength: '255'
     MinLength: '2'
     Type: String
@@ -228,14 +228,14 @@ Parameters:
     MinLength: '2'
     Type: String  
   DomainMemberSGID:
-    Description: ID of the domain member security group (e.g., sg-9cb7d0e5)
+    Description: ID of the domain member security group (e.g., sg-9cb7d0e5).
     Type: String
     #AWS::EC2::SecurityGroup::Id
   DomainNetBIOSName:
     AllowedPattern: "[a-zA-Z0-9\\-]+"
     Default: EXAMPLE
     Description: NetBIOS name of the domain for users of earlier
-      versions of Windows. You can use up to 15 characters, e.g. "EXAMPLE."
+      versions of Windows. You can use up to 15 characters.
     MaxLength: '15'
     MinLength: '1'
     Type: String
@@ -531,16 +531,16 @@ Resources:
         parameters:
           DomainDNSName: 
             default: !Sub "${DomainDNSName}"
-            description: "Fully qualified domain name (FQDN) of the forest root domain e.g. example.com"
+            description: "Fully qualified domain name (FQDN) of the forest root domain."
             type: "String"
           DomainNetBIOSName: 
             default: !Sub "${DomainNetBIOSName}"
             description: 'NetBIOS name of the domain for users of earlier
-            versions of Windows. You can use up to 15 characters, e.g. "EXAMPLE."'
+            versions of Windows. You can use up to 15 characters.'
             type: "String"
           DirectoryId:
             default: !Sub "${DirectoryId}"
-            description: "The ID of the AWS Directory Service directory. e.g. d-97672886b5"
+            description: "The ID of the AWS Directory Service directory (e.g., d-97672886b5)."
             type: "String"
           ADDnsIpAddresses:
             default: !Sub "${ADDnsIpAddresses}"
@@ -556,11 +556,11 @@ Resources:
             type: "String"              
           ClusterName:
             default: !Sub "${SqlFSxWSFCName}"
-            description: "NetBIOS name of the Cluster (up to 15 characters)"
+            description: "NetBIOS name of the cluster (up to 15 characters)."
             type: "String"   
           SqlFSxFCIName:
             default: !Sub "${SqlFSxFCIName}"
-            description: "NetBIOS name of the Cluster (up to 15 characters)"
+            description: "NetBIOS name of the failover cluster instance (up to 15 characters)."
             type: "String"  
           SQLAdminAccounts:            
             default: !Sub "${SQLAdminAccounts}"

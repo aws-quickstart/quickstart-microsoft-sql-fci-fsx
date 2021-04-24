@@ -36,7 +36,7 @@ For more information, see https://docs.aws.amazon.com/AWSCloudFormation/latest/U
 *SQL Server documentation*
 
 * https://msdn.microsoft.com/library/79d2ea5a-edd8-4b3b-9502-96202057b01a[Windows Server Failover Clustering with SQL Server^]
-* https://msdn.microsoft.com/en-us/library/hh510230.aspx[Always On availability groups: a high-availability and disaster-recovery solution^]
+* https://msdn.microsoft.com/en-us/library/hh510230.aspx[Always On availability groups^]
 
 *Other Quick Start reference deployments*
 

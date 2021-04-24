@@ -164,7 +164,7 @@ Parameters:
   ADServer1NetBIOSName:
     AllowedPattern: '[a-zA-Z0-9\-]+'
     Default: DC1
-    Description: NetBIOS name of the first Active Directory instance, located in Availability Zone 1. This name can have  up to 15 characters.
+    Description: NetBIOS name of the first Active Directory instance, located in Availability Zone 1. This name can have up to 15 characters.
     MaxLength: '15'
     MinLength: '1'
     Type: String
@@ -232,7 +232,7 @@ Parameters:
     AllowedPattern: '[a-zA-Z0-9\-]+'
     Default: example
     Description: NetBIOS name of the domain for users of earlier
-      versions of Windows. You can use up to 15 characters, e.g. "example."
+      versions of Windows. You can use up to 15 characters.
     MaxLength: '15'
     MinLength: '1'
     Type: String
@@ -358,28 +358,28 @@ Parameters:
   SqlFSxFCIName:
     AllowedPattern: "[a-zA-Z0-9\\-]+"
     Default: SqlFCI
-    Description: Name of the failover cluster instance (FCI) (up to 15 characters).
+    Description: Name of the failover cluster instance (FCI). You can use up to 15 characters.
     MaxLength: '15'
     MinLength: '1'
     Type: String
   SqlFSxServerNetBIOSName1:
     AllowedPattern: "[a-zA-Z0-9\\-]+"
     Default: SqlFSx1
-    Description: NetBIOS name of the primary instance (up to 15 characters).
+    Description: NetBIOS name of the primary instance. You can use up to 15 characters.
     MaxLength: '15'
     MinLength: '1'
     Type: String
   SqlFSxServerNetBIOSName2:
     AllowedPattern: "[a-zA-Z0-9\\-]+"
     Default: SqlFSx2
-    Description: NetBIOS name of the secondary instance (up to 15 characters).
+    Description: NetBIOS name of the secondary instance. You can use up to 15 characters.
     MaxLength: '15'
     MinLength: '1'
     Type: String
   SqlFSxWSFCName:
     AllowedPattern: "[a-zA-Z0-9\\-]+"
     Default: WSFC1
-    Description: Name of the Windows Server Failover Cluster (WSFC) (up to 15 characters).
+    Description: Name of the Windows Server Failover Cluster (WSFC). You can use up to 15 characters.
     MaxLength: '15'
     MinLength: '1'
     Type: String
