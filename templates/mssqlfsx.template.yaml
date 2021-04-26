@@ -2,7 +2,7 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: This workload template deploys a SqlFSx instance in an existing VPC. **IMPORTANT**
   This template creates EC2 instances and related resources. You will be billed for
-  the AWS resources used if you create a stack from this template.
+  the AWS resources used if you create a stack from this template. (qs-1rqmju6dm)
 Metadata:
   QuickStartDocumentation:
     EntrypointName: "Parameters for deploying into an existing VPC with self-managed Active Directory"
