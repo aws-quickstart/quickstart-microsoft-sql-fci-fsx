@@ -1,10 +1,7 @@
-// Edit this placeholder text to accurately describe your architecture.
+When deploying the {partner-product-short-name} Quick Start, you have three options:
 
-This Quick Start provides two deployment options:
+* *Deploy it into a new VPC*. This option works with either AWS Directory Service for Microsoft Active Directory (AWS Managed Microsoft AD) or self-managed Active Directory. It builds a new AWS environment consisting of the VPC, subnets, NAT gateways, security groups, bastion hosts, and other infrastructure components. It then deploys {partner-product-short-name} into this new VPC. 
+* *Deploy it into an existing VPC using an existing AWS managed directory*. With this option, you join Amazon FSx and the {partner-product-short-name} instances to an existing AWS Managed Microsoft AD domain.
+* *Deploy it into an existing VPC using an existing self-managed directory*. With this option, you join Amazon FSx and the {partner-product-short-name} instances to an existing self-managed Active Directory running on-premises or running on EC2 instances.
 
-* *Deploy {partner-product-short-name} into a new VPC*. This option builds a new AWS environment consisting of the VPC, subnets, NAT gateways, security groups, bastion hosts, Managed Directory Service or self-managed Active Directory and other infrastructure components. It then deploys {partner-product-short-name} into this new VPC.
-* *Deploy {partner-product-short-name} into existing VPC*.
-* * *With AWS Managed Directory Service*. This option provisions {partner-product-short-name} in your existing AWS VPC using existing AWS Managed Directory Service.
-* * *With self-managed Active Directory into an existing VPC*. This option provisions {partner-product-short-name} in your existing AWS VPC using existing self-managed Active Directory.
-
-The Quick Start provides separate templates for these options. It also lets you configure Classless Inter-Domain Routing (CIDR) blocks, instance types, and {partner-product-short-name} settings, as discussed later in this guide. If you select the template for existing VPC, there is also the option to join Amazon FSx and {partner-product-short-name} instances to an existing Active Directory domain. This existing AD can either be an instance of AWS Directory Service for Microsoft AD, or a self-managed AD running on-premises or running on EC2 instances.
+The Quick Start provides separate templates for these options. It also lets you configure Classless Inter-Domain Routing (CIDR) blocks, instance types, and other settings, as discussed later in this guide. 

@@ -2,13 +2,12 @@
 
 ==== Prepare for the deployment
 
-The deployment of this Quick Start requires a copy of the Microsoft SQL Server 2019 installation media in the form of an ISO. The typical file name is *SQLServer2019-x64-ENU.iso*.
+The deployment of this Quick Start requires a copy of the Microsoft SQL Server 2019 installation media as an .iso file. The typical file name is *SQLServer2019-x64-ENU.iso*.
 
-[start=1]
-. Download the evaluation edition of SQL Server 2019 from https://www.microsoft.com/en-us/evalcenter/evaluate-sql-server-2019[Microsoft Evaluation Center].
+. Download the https://www.microsoft.com/en-us/evalcenter/evaluate-sql-server-2019[SQL Server 2019 evaluation edition^] from the Microsoft Evaluation Center.
 +
 —or—
 +
-Obtain the ISO file from MSDN, if you have an MSDN account with licenses for server software.
+Obtain the .iso file from the Microsoft Developer Network if you have an MSDN account with licenses for server software.
 
-. Upload the ISO file to an S3 bucket.
+. Upload the .iso file to an S3 bucket.

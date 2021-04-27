@@ -1,15 +1,15 @@
-// Replace the <n> in each row to specify the number of resources used in this deployment. Remove the rows for resources that aren’t used.
+// Replace the <n> in each row to specify the number of resources used in this deployment. Remove the rows for resources that aren't used.
 |===
 |Resource |This deployment uses
 
 // Space needed to maintain table headers
-|VPCs |1
-|Elastic IP addresses |1
+|VPC |1
+|Elastic IP address |1
 |Security groups |3
 |AWS Identity and Access Management (IAM) roles |4
-|Auto Scaling groups |1
+|Auto Scaling group |1
 |Network Load Balancers |1
 |EC2 instances |3
-|AWS Managed directories |1
+|AWS managed directory |1
 |AWS Secrets Manager secrets |2
 |===

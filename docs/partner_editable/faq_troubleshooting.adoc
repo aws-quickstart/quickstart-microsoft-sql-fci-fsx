@@ -4,8 +4,8 @@
 
 *Q.* I encountered a *CREATE_FAILED* error when I launched the Quick Start.
 
-*A.* If AWS CloudFormation fails to create the stack, relaunch the template with *Rollback on failure* set to *Disabled*. This setting is under *Advanced* in the AWS CloudFormation console on the *Configure stack options* page. With this setting, the stack’s state is retained, and the instance keeps running so that you can troubleshoot the issue. (For Windows, look at the log files in `%ProgramFiles%\Amazon\EC2ConfigService` and `C:\cfn\log`.)
-// Customize this answer if needed. For example, if you’re deploying on Linux instances, either provide the location for log files on Linux or omit the final sentence. If the Quick Start has no EC2 instances, revise accordingly (something like "and the assets keep running").
+*A.* If AWS CloudFormation fails to create the stack, relaunch the template with *Rollback on failure* set to *Disabled*. This setting is under *Advanced* in the AWS CloudFormation console on the *Configure stack options* page. With this setting, the stack's state is retained, and the instance keeps running so that you can troubleshoot the issue. (For Windows, look at the log files in `%ProgramFiles%\Amazon\EC2ConfigService` and `C:\cfn\log`.)
+// Customize this answer if needed. For example, if you're deploying on Linux instances, either provide the location for log files on Linux or omit the final sentence. If the Quick Start has no EC2 instances, revise accordingly (something like "and the assets keep running").
 
 WARNING: When you set *Rollback on failure* to *Disabled*, you continue to incur AWS charges for this stack. Delete the stack when you finish troubleshooting.
 
@@ -16,29 +16,30 @@ For more information, see https://docs.aws.amazon.com/AWSCloudFormation/latest/U
 *A.* Launch the Quick Start templates from the links in this guide or from another S3 bucket. If you deploy the templates from a local copy on your computer or from a location other than an S3 bucket, you might encounter template-size limitations. For more information, see http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html[AWS CloudFormation quotas^].
 
 
-== Additional Resources
+== Additional resources
 
-* Getting Started Resource Center
-* https://docs.aws.amazon.com/general/latest/gr/[AWS General Reference]
-* https://docs.aws.amazon.com/general/latest/gr/glos-chap.html[AWS Glossary]
+*Amazon FSx*
 
-*AWS services*
+* https://docs.aws.amazon.com/fsx/latest/WindowsGuide/what-is.html[What Is Amazon FSx for Windows File Server?^]
+* https://docs.aws.amazon.com/fsx/latest/WindowsGuide/sql-server.html[Using Amazon FSx for Windows File Server with Microsoft SQL Server^]
 
-* AWS CloudFormation
-* https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AmazonEBS.html[Amazon EBS]
-* https://docs.aws.amazon.com/ec2/[Amazon EC2]
-* https://docs.aws.amazon.com/iam/[IAM]
-* https://docs.aws.amazon.com/secretsmanager/index.html[AWS Secrets Manager]
-* https://docs.aws.amazon.com/systems-manager/index.html[AWS Systems Manager]
-* https://docs.aws.amazon.com/vpc/[Amazon VPC]
+*Other AWS services*
+
+* https://docs.aws.amazon.com/cloudformation/[AWS CloudFormation^]
+* https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AmazonEBS.html[Amazon Elastic Block Store (Amazon EBS)^]
+* https://docs.aws.amazon.com/ec2/[Amazon Elastic Compute Cloud (Amazon EC2)^]
+* https://docs.aws.amazon.com/iam/[AWS Identity and Access Management (IAM)^]
+* https://docs.aws.amazon.com/secretsmanager/[AWS Secrets Manager^]
+* https://docs.aws.amazon.com/systems-manager/[AWS Systems Manager^]
+* https://docs.aws.amazon.com/vpc/[Amazon Virtual Private Cloud (Amazon VPC)^]
 
 *SQL Server documentation*
 
-* https://msdn.microsoft.com/library/79d2ea5a-edd8-4b3b-9502-96202057b01a[Windows Server Failover Clustering (WSFC) with SQL Server]
-* https://msdn.microsoft.com/en-us/library/hh510230.aspx[Always On Availability Groups]
+* https://msdn.microsoft.com/library/79d2ea5a-edd8-4b3b-9502-96202057b01a[Windows Server Failover Clustering with SQL Server^]
+* https://msdn.microsoft.com/en-us/library/hh510230.aspx[Always On availability groups^]
 
 *Other Quick Start reference deployments*
 
-* https://aws.amazon.com/quickstart/[AWS Quick Start home page]
-* https://docs.aws.amazon.com/quickstart/latest/active-directory-ds/[Microsoft Active Directory DS on the AWS Cloud]
-* https://docs.aws.amazon.com/quickstart/latest/rd-gateway/[Microsoft Remote Desktop Gateway on the AWS Cloud]
+* https://aws.amazon.com/quickstart/[AWS Quick Start home page^]
+* https://aws.amazon.com/quickstart/architecture/active-directory-ds/[Active Directory Domain Services on AWS^]
+* https://aws.amazon.com/quickstart/architecture/rd-gateway/[Remote Desktop Gateway on AWS^]
