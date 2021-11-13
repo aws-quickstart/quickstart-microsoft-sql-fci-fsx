@@ -63,12 +63,24 @@ Metadata:
           - SqlFSxFCIName
           - SQLAdminAccounts
       - Label:
+          default: Application Insights configuration
+        Parameters:
+          - EnableAppInsights
+          - ApplicationName
+          - ResourceGroupName
+      - Label:
           default: AWS Quick Start configuration
         Parameters:
           - QSS3BucketName
           - QSS3BucketRegion
           - QSS3KeyPrefix
     ParameterLabels:
+      ApplicationName:
+        default: Application Insights application name
+      EnableAppInsights:
+        default: Enable Application Insights
+      ResourceGroupName:
+        default: Resource Group name
       ADScenarioType:
         default: Active Directory scenario type
       ADServer1InstanceType:
@@ -140,6 +152,21 @@ Metadata:
       WorkloadInstanceType:
         default: Workload servers EC2 instance type
 Parameters:
+  ApplicationName:
+    Default: MSSQL
+    Description: Application Insights application name
+    Type: String
+  EnableAppInsights:
+    Type: String
+    Default: 'false'
+    Description: Select whether to enable Application Insights
+    AllowedValues:
+      - 'true'
+      - 'false'
+  ResourceGroupName:
+    Type: String
+    Default: SQL
+    Description: Application Resource Group name
   ADScenarioType:
     AllowedValues:
       - AWS Directory Service for Microsoft AD (Enterprise Edition)
@@ -545,6 +572,9 @@ Resources:
           QSS3BucketName: !Ref 'QSS3BucketName'
           QSS3BucketRegion: !Ref 'QSS3BucketRegion'
           QSS3KeyPrefix: !Ref 'QSS3KeyPrefix'
+          ApplicationName: !Ref 'ApplicationName'
+          EnableAppInsights: !Ref 'EnableAppInsights'
+          ResourceGroupName: !Ref 'ResourceGroupName'
         - VPCID: !GetAtt 'VPCStack.Outputs.VPCID'
           PrivateSubnet1ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet1AID'
           PrivateSubnet2ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet2AID'
@@ -570,3 +600,6 @@ Resources:
           QSS3BucketName: !Ref 'QSS3BucketName'
           QSS3BucketRegion: !Ref 'QSS3BucketRegion'
           QSS3KeyPrefix: !Ref 'QSS3KeyPrefix'
+          ApplicationName: !Ref 'ApplicationName'
+          EnableAppInsights: !Ref 'EnableAppInsights'
+          ResourceGroupName: !Ref 'ResourceGroupName'

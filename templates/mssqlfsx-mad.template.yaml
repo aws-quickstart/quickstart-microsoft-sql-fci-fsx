@@ -48,12 +48,24 @@ Metadata:
       - SqlFSxFCIName
       - SQLAdminAccounts
     - Label:
+        default: Application Insights configuration
+      Parameters:
+      - EnableAppInsights
+      - ApplicationName
+      - ResourceGroupName
+    - Label:
         default: AWS Quick Start configuration
       Parameters:
       - QSS3BucketName
       - QSS3BucketRegion
       - QSS3KeyPrefix
     ParameterLabels:
+      ApplicationName:
+        default: Application Insights application name
+      EnableAppInsights:
+        default: Enable Application Insights
+      ResourceGroupName:
+        default: Resource Group name
       KeyPairName:
         default: SSH key name
       PrivateSubnet1ID:
@@ -107,6 +119,21 @@ Metadata:
       FileShareThroughputCapacity:
         default: File-share throughput capacity
 Parameters:
+  ApplicationName:
+    Default: MSSQLFCI
+    Description: Application Insights application name
+    Type: String
+  EnableAppInsights:
+    Type: String
+    Default: 'false'
+    Description: Select whether to enable Application Insights
+    AllowedValues:
+      - 'true'
+      - 'false'
+  ResourceGroupName:
+    Type: String
+    Default: SQL
+    Description: Application Resource Group name
   KeyPairName:
     Description: Name of an existing EC2 key pair. All instances will launch with
       this key pair.
@@ -299,6 +326,7 @@ Parameters:
     Type: String
 Conditions:
   UsingDefaultBucket: !Equals [!Ref QSS3BucketName, 'aws-quickstart']
+  EnableAppInsightForSQLHA: !Equals [!Ref 'EnableAppInsights', 'true']
 Rules:
   KeyPairsNotEmpty:
     Assertions:
@@ -1181,6 +1209,8 @@ Resources:
           Ref: SqlFSxFCIName
       - Key: FCIRole
         Value: Primary
+      - Key: ResourceGroup
+        Value: !Ref ResourceGroupName
       BlockDeviceMappings:
       - DeviceName: "/dev/sda1"
         Ebs:
@@ -1245,6 +1275,8 @@ Resources:
           Ref: SqlFSxFCIName
       - Key: FCIRole
         Value: Secondary
+      - Key: ResourceGroup
+        Value: !Ref ResourceGroupName
       BlockDeviceMappings:
       - DeviceName: "/dev/sda1"
         Ebs:
@@ -1381,6 +1413,50 @@ Resources:
         PreferredSubnetId: 
           Ref: PrivateSubnet1ID
         ActiveDirectoryId: !Sub '${DirectoryId}'
+  ResourceGroup:
+    Type: AWS::ResourceGroups::Group
+    Properties:
+      Name: !Ref 'ResourceGroupName'
+      Description: "A resource group for SQL servers"
+      ResourceQuery:
+        Type:
+          "TAG_FILTERS_1_0" 
+        Query:
+          ResourceTypeFilters: 
+            - "AWS::EC2::Instance" 
+          TagFilters:
+            - 
+              Key: ResourceGroup
+              Values: 
+                - !Ref ResourceGroupName
+  AppInsightsForSQLHA:
+    Condition: EnableAppInsightForSQLHA
+    DependsOn: SSMWaitCondition
+    Type: AWS::ApplicationInsights::Application
+    Properties:
+      ResourceGroupName: !Ref 'ResourceGroupName'
+      AutoConfigurationEnabled: false
+      CustomComponents:
+        - ComponentName: !Sub 'SQLHAClusterInstances-${ApplicationName}'
+          ResourceList:
+            - !Sub 'arn:${AWS::Partition}:ec2:${AWS::Region}:${AWS::AccountId}:instance/${SqlFSxInstance1}'
+            - !Sub 'arn:${AWS::Partition}:ec2:${AWS::Region}:${AWS::AccountId}:instance/${SqlFSxInstance2}'
+
+      ComponentMonitoringSettings:
+        - ComponentName: !Sub 'SQLHAClusterInstances-${ApplicationName}'
+          Tier: SQL_SERVER_ALWAYSON_AVAILABILITY_GROUP
+          ComponentConfigurationMode: DEFAULT_WITH_OVERWRITE
+          DefaultOverwriteComponentConfiguration:
+            SubComponentTypeConfigurations:
+              - SubComponentType: AWS::EC2::Instance
+                SubComponentConfigurationDetails:
+                  Logs:
+                    - LogGroupName: !Sub 'SQL_SERVER-${ResourceGroupName}'
+                      LogType: SQL_SERVER
+                      LogPath: C:\Program Files\Microsoft SQL Server\MSSQL**.MSSQLSERVER\MSSQL\Log\ERRORLOG
+      Tags:
+        - Key: SourceTemplate
+          Value: AWSQuickStart
 Outputs:
   InstanceIP:
     Description: "Private IP address of SqlFSx instance."

@@ -24,6 +24,7 @@ tests:
       ADScenarioType: 'Microsoft AD on Amazon EC2'
       AvailabilityZones: $[taskcat_getaz_2]
       DomainAdminPassword: $[taskcat_genpass_16]
+      EnableAppInsights: 'true'
       KeyPairName: $[taskcat_getkeypair]
       QSS3BucketName: $[taskcat_autobucket]
       QSS3BucketRegion: $[taskcat_current_region]
@@ -35,12 +36,13 @@ tests:
     regions:
     - us-east-1
     s3_bucket: ''
-    template: templates/mssqlfci-main.template.yaml
+    template: templates/mssqlfsx-main.template.yaml
   mssql-mad:
     parameters:
       ADScenarioType: 'AWS Directory Service for Microsoft AD (Enterprise Edition)'
       AvailabilityZones: $[taskcat_getaz_2]
       DomainAdminPassword: $[taskcat_genpass_16]
+      EnableAppInsights: 'true'
       KeyPairName: $[taskcat_getkeypair]
       QSS3BucketName: $[taskcat_autobucket]
       QSS3BucketRegion: $[taskcat_current_region]
@@ -52,4 +54,4 @@ tests:
     regions:
     - us-east-2
     s3_bucket: ''
-    template: templates/mssqlfci-main.template.yaml
+    template: templates/mssqlfsx-main.template.yaml
