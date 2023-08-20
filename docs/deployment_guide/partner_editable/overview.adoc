@@ -1,10 +1,33 @@
-This guide covers the information you need to deploy the {partner-product-name} Partner Solution in the AWS Cloud.
+This guide covers the information you need to deploy the {partner-product-name} Partner Solution in the AWS Cloud. 
 
-// Fill in the info in <angle brackets> for use on the landing page only: 
-This Amazon Web Services (AWS) Partner Solution deploys [<product name>](<partner's marketing product page>) in the AWS Cloud so that <purpose>. This solution is for <target users> who want to <do what> so that <why>. For more information, refer to the [<product name> documentation](<URL>).
+This Partner Solution is for IT infrastructure architects, database administrators, and DevOps professionals who plan to implement or extend Microsoft SQL Server (MSSQL) using SQL Server on AWS with Windows Server Failover Clustering (WSFC). Unlike the Partner Solution for https://aws.amazon.com/quickstart/architecture/sql/[SQL Server with Always On Replication^], this one deploys an https://docs.microsoft.com/en-us/sql/sql-server/failover-clusters/windows/always-on-failover-cluster-instances-sql-server?view=sql-server-ver15[Always On Failover Cluster Instance^] (FCI). It also deploys https://aws.amazon.com/fsx/windows/[Amazon FSx for Windows File Server^] as a network share to store the database files.
 
-// Deploying this solution does not guarantee an organization’s compliance with any laws, certifications, policies, or other regulations. [Uncomment this statement only for solutions that relate to compliance. We'll add the corresponding reference part to the landing page and get legal approval before publishing.]
+This guide does not provide general configuration and usage information for WSFC and MSSQL. For general guidance and best practices, consult the Microsoft product documentation and the https://d1.awsstatic.com/whitepapers/best-practices-for-deploying-microsoft-sql-server-on-aws.pdf[Best Practices for Deploying Microsoft SQL Server on AWS^] whitepaper.
 
-// For advanced information about the product, troubleshooting, or additional functionality, refer to the https://{partner-solution-github-org}.github.io/{partner-solution-project-name}/operational/index.html[Operational Guide^].
+:xrefstyle: short
 
-// For information about using this Partner Solution for migrations, refer to the https://{partner-solution-github-org}.github.io/{partner-solution-project-name}/migration/index.html[Migration Guide^].
+The {partner-product-short-name} Partner Solution deploys a highly available environment that includes Windows Server and SQL Server running on Amazon Elastic Compute Cloud (EC2). It requires shared storage that is accessible by all nodes within the WSFC cluster. It supports SQL Server 2019 running on Windows Server 2019.
+
+This architecture uses a highly available Multi-AZ Amazon FSx file system as the network share used to store MSSQL database files. The Amazon FSx file system and EC2 Windows instances that host this architecture's nodes are joined to the same Active Directory domain.
+
+NOTE: The "instance" in "failover cluster instance" means something different from the "instance" in "EC2 instance." In this Partner Solution, a failover cluster instance, or FCI, has the appearance of an instance of SQL Server running on a single computer. A failover cluster instance provides failover from one EC2 instance (WSFC node) to another if the current EC2 instance goes down. For an illustration, see <<architecture1>>.
+
+Traditionally, FCIs have been difficult to deploy and manage. With its Multi-AZ file system option, Amazon FSx provides fully managed file storage. This storage enables the high availability and durability that's required to run business-critical Microsoft SQL Server database workloads without requiring licenses for each server. Amazon FSx automatically handles failover, simplifying shared storage to host your database deployments while reducing cost.
+
+The automation in this deployment uses AWS Systems Manager Automation, AWS CloudFormation, and   Windows PowerShell Desired State Configuration (DSC) to deploy a multi-node SQL Always On FCI. Windows Server Failover Clustering is a prerequisite for deploying an Always On FCI. MSSQL uses WSFC to increase application availability. WSFC provides infrastructure features that complement the high availability and disaster recovery scenarios supported in the AWS Cloud.
+
+FCI, which was introduced with SQL Server 2008 as a high availability feature, continues to be available in all newer versions of MSSQL. When used on premises, SQL Server FCI is often used purely for high availability within a single data center. On AWS, you can use the {partner-product-short-name} Partner Solution to cover both high availability and disaster recovery requirements.
+
+Since FCIs require shared storage, traditionally they had to be deployed within a single data center. On AWS, the shared storage can span multiple Availability Zones, enabling WSFC clusters to span multiple Availability Zones.
+
+Implementing WSFC on AWS is similar to deploying it on premises as long as you meet these two requirements:
+
+* The cluster nodes are deployed inside a virtual private cloud (VPC).
+* The cluster nodes are deployed in separate subnets to provide high availability across multiple Availability Zones.
+
+This Partner Solution meets these requirements.
+
+For more information:
+
+* https://docs.aws.amazon.com/fsx/latest/WindowsGuide/what-is.html[What Is Amazon FSx for Windows File Server?^]
+* https://docs.aws.amazon.com/fsx/latest/WindowsGuide/sql-server.html[Using Amazon FSx for Windows File Server with Microsoft SQL Server^]

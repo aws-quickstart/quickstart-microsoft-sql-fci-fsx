@@ -2,5 +2,11 @@
 
 For troubleshooting common Partner Solution issues, refer to the https://fwd.aws/rA69w?[AWS Partner Solution General Information Guide^] and https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/troubleshooting.html[Troubleshooting CloudFormation^].
 
-// == Resources
-// Uncomment section and add links to any external resources that are specified by the partner.
+If the deployment fails, follow these steps:
+
+. Open the https://console.aws.amazon.com/systems-manager/home?region=us-east-1[AWS Systems Manager console^].
+. Select your deployment Region. 
+. Choose *Automation* from the left-hand side, and locate the failed automation document. 
+. Navigate to the failed step.
+. Expand *Output* to view the automation logs. 
+. Follow the link to Amazon CloudWatch Logs to view detailed automation logs.

@@ -1,3 +1,9 @@
 // Include details about any licenses and how to sign up. Provide links as appropriate.
 
 There is no cost to use this Partner Solution, but you will be billed for any AWS services or resources that this Partner Solution deploys. For more information, refer to the https://fwd.aws/rA69w?[AWS Partner Solution General Information Guide^].
+
+This Quick Start requires a license for Microsoft SQL Server 2019. You can obtain a trial license from the https://www.microsoft.com/en-us/evalcenter/evaluate-sql-server-2019[Microsoft Evaluation Center^]. 
+
+Alternatively, if you're not using the software for a production environment, you can use the MSSQL Developer Edition. This edition provides the full capabilities of Enterprise Edition without requiring license costs. 
+
+This Quick Start deploys MSSQL in Bring-Your-Own-License mode. It does not support deployment of MSSQL license-included Amazon Machine Images (AMIs).

@@ -7,22 +7,46 @@ AWS Cloud.
 
 [#architecture1]
 .Partner Solution architecture for {partner-product-short-name} on AWS
-image::../docs/deployment_guide/images/architecture_diagram.png[Architecture]
+image::../docs/deployment_guide/images/ms-sql-fci-fsx-architecture_diagram.png[architecture1,90%]
 
 As shown in <<architecture1>>, this Partner Solution sets up the following:
 
 * A highly available architecture that spans two Availability Zones.*
-* A virtual private cloud (VPC) configured with public and private subnets, according to AWS
-best practices, to provide you with your own virtual network on AWS.*
+* A VPC configured with public and private subnets, according to AWS best practices, to provide you with your own virtual network on AWS.*
 * In the public subnets:
-** Managed network address translation (NAT) gateways to allow outbound
-internet access for resources in the private subnets.*
-** A Linux bastion host in an Auto Scaling group to allow inbound Secure
-Shell (SSH) access to Amazon Elastic Compute Cloud (Amazon EC2) instances in public and private subnets.*
+** Managed network address translation (NAT) gateways to allow outbound internet access for resources in the private subnets.*
+** A Remote Desktop Gateway (RD Gateway) host in an Auto Scaling group to allow inbound Remote Desktop Protocol (RDP) access to EC2 instances in public and private subnets.*
 * In the private subnets:
-** <item>.
-** <item>.
-// Add bullet points for any additional components that are included in the deployment. Ensure that the additional components are shown in the architecture diagram. End each bullet with a period.
-* <describe any additional components>.
+** Two EC2 instances running Microsoft Windows with SQL Server. These instances are installed as nodes in a WSFC cluster in an Always On FCI configuration across the Availability Zones. Each node contains an Amazon Elastic Block Store (Amazon EBS) root volume.
+* An Amazon FSx file system, which the FCI nodes share. SQL Server is installed in this file system. This file system also stores all SQL database and log files, and it acts as the WSFC cluster's file-share witness.*
+* AWS Directory Service with a managed directory. The Amazon FSx file system and the EC2 Windows instances that host this architecture's nodes are joined to the same Active Directory domain.
+* AWS Secrets Manager keys to store credentials.
+* An AWS Systems Manager automation document to automate the deployment.
 
-[.small]#* The template that deploys this Partner Solution into an existing VPC skips the components marked by asterisks and prompts you for your existing VPC configuration.#
+[.small]#*The template that deploys the Partner Solution into an existing VPC skips the components marked by asterisks and prompts you for your existing VPC configuration.#
+
+=== Comparison with SQL Server with Always On Replication ===
+
+To better understand the architecture of the {partner-product-short-name} Partner Solution, it's helpful to compare with the https://fwd.aws/KEvrk?/[Partner Solution for SQL Server with Always On Replication^]. Both Partner Solutions are architected to ensure high availability. Both have EC2 instances clustered using WSFC. Both have database files stored in multiple Availability Zones. What's different is the way each Partner Solution accomplishes database high availability.
+
+The replication-based architecture requires a full installation of SQL Server (Standard or Enterprise edition) on each EC2 instance. Therefore, each EC2 instance requires a SQL Server license.
+
+*What makes the FCI-based architecture unique is that it requires only one SQL Server license.* With FCI, database-related files aren't replicated across the WSFC cluster, and SQL Server is not installed in the local file systems. Instead, this Partner Solution creates an Amazon FSx file system and installs SQL Server there. The EC2 instances (FCI nodes) share this file system, which also stores all the SQL database files and log files. In addition, this shared file system acts as the cluster's file-share witness. 
+
+=== Advantages and disadvantages ===
+The architecture of each SQL Server Partner Solution has advantages and disadvantages.
+
+*SQL Server with Always On Replication Partner Solution:*
+
+* Advantages: 
+** The EBS volume type, capacity, and IOPS can be configured, allowing flexibility.
+** It supports both AWS-provided licensing and Bring Your Own License models for Microsoft SQL.
+* Disadvantage: 
+** Each WSFC node with SQL Server installed requires a SQL Server license, increasing cost.
+
+*{partner-product-short-name} Partner Solution:*
+
+* Advantage: It requires only one SQL Server license.
+* Disadvantages:
+** It relies on an Amazon FSx Multi-AZ file system, which is not supported in all AWS Regions.
+** It requires the customer to provide a SQL Server .iso file and license since AWS-provided SQL licensing is not supported.

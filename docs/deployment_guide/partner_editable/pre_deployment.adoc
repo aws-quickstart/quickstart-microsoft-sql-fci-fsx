@@ -1,3 +1,13 @@
 //Include any predeployment steps here, such as signing up for a Marketplace AMI or making any changes to a partner account. If there are no predeployment steps, leave this file empty.
 
 == Predeployment steps
+
+The deployment of this Partner Solution requires a copy of the Microsoft SQL Server 2019 installation media as an .iso file. The typical file name is *SQLServer2019-x64-ENU.iso*.
+
+. Download the https://www.microsoft.com/en-us/evalcenter/evaluate-sql-server-2019[SQL Server 2019 evaluation edition^] from the Microsoft Evaluation Center.
++
+—or—
++
+Obtain the .iso file from the Microsoft Developer Network if you have an MSDN account with licenses for server software.
+
+. Upload the .iso file to an S3 bucket.

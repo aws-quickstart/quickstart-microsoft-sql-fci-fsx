@@ -1,3 +1,47 @@
 // Include any postdeployment steps here, such as steps necessary to test that the deployment was successful. If there are no postdeployment steps, leave this file empty.
 
 == Postdeployment steps
+
+=== Run Windows updates
+
+In order to ensure the deployed servers' operating systems and installed applications have the latest Microsoft updates, run Windows Update on each server.
+
+. Create an RDP session from the Remote Desktop Gateway server to each deployed server.
+. Choose the *Settings* application.
+. Choose *Update & Security*.
+. Choose *Check for updates*.
+. Install any updates and reboot if necessary.
+
+=== Test the deployment
+// If steps are required to test the deployment, add them here. If not, remove the heading
+
+. Open an RDP session to one of the two SQL servers.
+. Open Windows *Administrative Tools*, and launch *Failover Cluster Manager*.
++
+[#postdeploy1]
+.Failover Cluster Manager
+[link=images/image1.png]
+image::../docs/deployment_guide/images/image1.png[postdeploy1]
++
+. Choose *Nodes*, and ensure that both nodes are online.
++
+[#postdeploy2]
+.Both nodes showing online
+image::../docs/deployment_guide/images/image2.png[postdeploy2]
++
+. Select the failover cluster, and verify that both the cluster and the file-share witness are online.
++
+[#postdeploy3]
+.Cluster overview showing that both the cluster and the file-share witness are online
+image::../docs/deployment_guide/images/image3.png[postdeploy3]
++
+. Download https://docs.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-ver15[SQL Server Management Studio (SSMS)^].
+. Install SQL Server Management Studio. The installation requires a reboot.
+. After rebooting, log back in to the SQL server.
+. Launch SQL Server Management Studio, and connect to the FCI.
++
+[#postdeploy4]
+.Connecting to the cluster
+image::../docs/deployment_guide/images/image4.png[50%]
++
+. If you are able to log in, the deployment was successful.
