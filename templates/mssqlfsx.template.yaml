@@ -58,6 +58,11 @@ Metadata:
       - ApplicationName
       - ResourceGroupName
     - Label:
+        default: AWS Systems Manager AMI configuration
+      Parameters:
+        - WS2019FULLBASE
+        - WS2016FULLBASE
+    - Label:
         default: AWS Quick Start configuration
       Parameters:
       - QSS3BucketName
@@ -120,6 +125,10 @@ Metadata:
         default: File-share volume size
       FileShareThroughputCapacity:
         default: File-share throughput capacity
+      WS2019FULLBASE: 
+        default: Windows Server 2019 full base AMI
+      WS2016FULLBASE: 
+        default: Windows Server 2016 full base AMI
 Parameters:
   ApplicationName:
     Default: MSSQL
@@ -276,10 +285,10 @@ Parameters:
     Type: String
   WindowsVersion:
     AllowedValues:
-    - Windows_Server-2019-English-Full-Base*
-    - Windows_Server-2016-English-Full-Base*
+    - Windows Server 2019
+    - Windows Server 2016
     ConstraintDescription: Must be one of the supported Windows versions.
-    Default: Windows_Server-2019-English-Full-Base*
+    Default: Windows Server 2019
     Description: Select Windows version to run SQL Server.
     Type: String
   WorkloadInstanceType:
@@ -320,10 +329,19 @@ Parameters:
     Description: Comma-separated user names are used as MSSQL DB administrators. It could be Active Directory domain administrators or other local or domain users.
     MaxLength: '25'
     MinLength: '5'
-    Type: String    
+    Type: String
+  WS2019FULLBASE:
+    Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
+    Default: '/aws/service/ami-windows-latest/Windows_Server-2019-English-Full-Base'
+    Description: AMI for Windows Server 2019
+  WS2016FULLBASE:
+    Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
+    Default: '/aws/service/ami-windows-latest/Windows_Server-2016-English-Full-Base'
+    Description: AMI for Windows Server 2016
 Conditions:
   UsingDefaultBucket: !Equals [!Ref QSS3BucketName, 'aws-quickstart']
   EnableAppInsightForSQLHA: !Equals [!Ref 'EnableAppInsights', 'true']
+  Server2019: !Equals [!Ref 'WindowsVersion', 'Windows Server 2019']
 Rules:
   KeyPairsNotEmpty:
     Assertions:
@@ -354,149 +372,6 @@ Resources:
     Properties: 
       LogGroupName: !Sub '/aws/Quick_Start/${AWS::StackName}'
       RetentionInDays: 30
-  WindowsBaseAMIInfo:
-    Type: Custom::WindowsBaseAMIInfo
-    Properties:
-      ServiceToken:
-        Fn::GetAtt:
-        - AMIInfoFunction
-        - Arn
-      Region:
-        Ref: AWS::Region
-      AMIName: !Ref WindowsVersion
-  AMIInfoFunction:
-    Type: AWS::Lambda::Function
-    Properties:
-      Code:
-        ZipFile:
-          Fn::Join:
-          - ''
-          - - "/**\n"
-            - "* A Lambda function that looks up the latest AMI ID for a given region
-              and architecture.\n"
-            - "**/\n"
-            - 'var aws = require("aws-sdk");'
-            - 'exports.handler = function(event, context) {'
-            - '    console.log("REQUEST RECEIVED:\n" + JSON.stringify(event));'
-            - "    // For Delete requests, immediately send a SUCCESS response.\n"
-            - '    if (event.RequestType == "Delete") {'
-            - '        sendResponse(event, context, "SUCCESS");'
-            - "        return;\n"
-            - "    }\n"
-            - '    var responseStatus = "FAILED";'
-            - "    var responseData = {};\n"
-            - "    var ec2 = new aws.EC2({region: event.ResourceProperties.Region});\n"
-            - "    var describeImagesParams = {\n"
-            - '        Filters: [{ Name: "name", Values: [event.ResourceProperties.AMIName]}],'
-            - '        Owners: ["amazon"]'
-            - "    };\n"
-            - "    // Get AMI IDs with the specified name pattern and owner\n"
-            - "    ec2.describeImages(describeImagesParams, function(err, describeImagesResult)
-              {\n"
-            - "        if (err) {\n"
-            - '            responseData = {Error: "DescribeImages call failed"};'
-            - '            console.log(responseData.Error + ":\n", err);'
-            - "        }\n"
-            - "        else {\n"
-            - "            var images = describeImagesResult.Images;\n"
-            - "            // Sort images by name in decscending order. The names
-              contain the AMI version, formatted as YYYY.MM.Ver.\n"
-            - "            images.sort(function(x, y) { return y.CreationDate.localeCompare(x.CreationDate);
-              });\n"
-            - "            for (var j = 0; j < images.length; j++) {\n"
-            - "                if (isBeta(images[j].Name)) continue;\n"
-            - '                responseStatus = "SUCCESS";'
-            - '                responseData["Id"] = images[j].ImageId;'
-            - "                break;\n"
-            - "            }\n"
-            - "        }\n"
-            - "        sendResponse(event, context, responseStatus, responseData);\n"
-            - "    });\n"
-            - "};\n"
-            - "\n"
-            - "// Check if the image is a beta or rc image. The Lambda function won't
-              return any of those images.\n"
-            - 'function isBeta(imageName) {'
-            - '    return imageName.toLowerCase().indexOf("beta") > -1 || imageName.toLowerCase().indexOf(".rc")
-              > -1;'
-            - "}\n"
-            - "// Send response to the pre-signed S3 URL \n"
-            - 'function sendResponse(event, context, responseStatus, responseData)
-              {'
-            - "    var responseBody = JSON.stringify({\n"
-            - "        Status: responseStatus,\n"
-            - '        Reason: "See the details in CloudWatch Log Stream: " + context.logStreamName,'
-            - "        PhysicalResourceId: context.logStreamName,\n"
-            - "        StackId: event.StackId,\n"
-            - "        RequestId: event.RequestId,\n"
-            - "        LogicalResourceId: event.LogicalResourceId,\n"
-            - "        Data: responseData\n"
-            - "    });\n"
-            - '    console.log("RESPONSE BODY:\n", responseBody);'
-            - '    var https = require("https");'
-            - '    var url = require("url");'
-            - "    var parsedUrl = url.parse(event.ResponseURL);\n"
-            - "    var options = {\n"
-            - "        hostname: parsedUrl.hostname,\n"
-            - "        port: 443,\n"
-            - "        path: parsedUrl.path,\n"
-            - '        method: "PUT",'
-            - "        headers: {\n"
-            - '            "content-type": "",'
-            - '            "content-length": responseBody.length'
-            - "        }\n"
-            - "    };\n"
-            - '    console.log("SENDING RESPONSE...\n");'
-            - "    var request = https.request(options, function(response) {\n"
-            - '        console.log("STATUS: " + response.statusCode);'
-            - '        console.log("HEADERS: " + JSON.stringify(response.headers));'
-            - "        // Tell AWS Lambda that the function execution is done  \n"
-            - "        context.done();\n"
-            - "    });\n"
-            - '    request.on("error", function(error) {'
-            - '        console.log("sendResponse Error:" + error);'
-            - "        // Tell AWS Lambda that the function execution is done  \n"
-            - "        context.done();\n"
-            - "    });\n"
-            - "    // write data to request body\n"
-            - "    request.write(responseBody);\n"
-            - "    request.end();\n"
-            - "}"
-      Handler: index.handler
-      Role:
-        Fn::GetAtt:
-        - AMIInfoFunctionLambdaExecutionRole
-        - Arn
-      Runtime: nodejs12.x
-      Timeout: 30
-  AMIInfoFunctionLambdaExecutionRole:
-    Type: AWS::IAM::Role
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-        - Effect: Allow
-          Principal:
-            Service:
-            - lambda.amazonaws.com
-          Action:
-          - sts:AssumeRole
-      Path: "/"
-      Policies:
-      - PolicyName: root
-        PolicyDocument:
-          Version: '2012-10-17'
-          Statement:
-          - Effect: Allow
-            Action:
-            - logs:CreateLogGroup
-            - logs:CreateLogStream
-            - logs:PutLogEvents
-            Resource: !Sub 'arn:${AWS::Partition}:logs:*:*:*'
-          - Effect: Allow
-            Action:
-            - ec2:DescribeImages
-            Resource: "*"
   AWSQuickstartSqlFSxRole:
     Type: AWS::IAM::Role
     Metadata:
@@ -1189,10 +1064,7 @@ Resources:
     Type: AWS::EC2::Instance
     DependsOn: FSxWindowsFileSystem
     Properties:
-      ImageId:
-        Fn::GetAtt:
-        - WindowsBaseAMIInfo
-        - Id
+      ImageId: !If [Server2019, !Ref 'WS2019FULLBASE', !Ref 'WS2016FULLBASE']
       IamInstanceProfile:
         Ref: SqlFSxProfile
       InstanceType:
@@ -1255,10 +1127,7 @@ Resources:
   SqlFSxInstance2:
     Type: AWS::EC2::Instance
     Properties:
-      ImageId:
-        Fn::GetAtt:
-        - WindowsBaseAMIInfo
-        - Id
+      ImageId: !If [Server2019, !Ref 'WS2019FULLBASE', !Ref 'WS2016FULLBASE']
       IamInstanceProfile:
         Ref: SqlFSxProfile
       InstanceType:
