@@ -422,10 +422,10 @@ Parameters:
     Type: String
   WindowsVersion:
     AllowedValues:
-    - Windows_Server-2019-English-Full-Base*
-    - Windows_Server-2016-English-Full-Base*
+    - Windows Server 2019
+    - Windows Server 2016
     ConstraintDescription: Must be one of the supported Windows versions.
-    Default: Windows_Server-2019-English-Full-Base*
+    Default: Windows Server 2019
     Description: Choose the Windows version to run SQL Server.
     Type: String
   WorkloadInstanceType:
